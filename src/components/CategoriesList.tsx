@@ -11,7 +11,7 @@ const CategoriesList = () => {
 
     if (isLoading) {
         return (
-            <div className="ml-1">
+            <div className="mx-4 max-w-[850px]">
                 <h2 className="text-3xl mb-4">Categorías</h2>
                 <ul className="mb-8 flex flex-col gap-1">
                     <li>
@@ -24,7 +24,7 @@ const CategoriesList = () => {
 
     if (error || data instanceof Error) {
         return (
-            <div className="ml-1">
+            <div className="mx-4 max-w-[850px]">
                 <h2 className="text-3xl mb-4">Categorías</h2>
                 <ul className="mb-8 flex flex-col gap-1">
                     <li>
@@ -36,9 +36,9 @@ const CategoriesList = () => {
     }
 
     return (
-        <div className="ml-1">
+        <div className="mx-4 max-w-[850px]">
             <h2 className="text-3xl mb-4">Categorías</h2>
-            <ul className="mb-8 flex flex-col gap-1">
+            <ul className="mb-8 flex flex-wrap justify-around gap-4">
                 {data!.map((e, idx: number) => {
                     return (
                         <li key={idx}>

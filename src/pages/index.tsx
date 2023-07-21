@@ -27,7 +27,6 @@ const Mainboard: FunctionComponent<MainboardProps> = ({ timelineData }) => {
     queryFn: getTimelines,
     initialData: timelineData,
     refetchInterval: 1000 * 60 * 10,
-
   })
 
   const debouncedHandleSearchBar = debounce((value: string) => {
