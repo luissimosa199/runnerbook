@@ -86,9 +86,9 @@ const Mainboard: FunctionComponent<MainboardProps> = ({ timelineData }) => {
         description="Ciclista Amateur"
       />
       <div className="text-center max-w-[850px] mx-auto flex flex-col mb-4">
-        <input placeholder="Buscar por categoría" className="border rounded p-2" type="text" onChange={handleSearchBar} />
+        <input placeholder="Buscar por categoría" className="border rounded p-2 mb-4" type="text" onChange={handleSearchBar} />
+        <CategoriesList />
       </div>
-      <CategoriesList />
       <TimelineForm />
 
       <div className="mt-4">
