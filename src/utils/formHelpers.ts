@@ -1,0 +1,175 @@
+import { TimelineFormInputs } from "@/types";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import Swal from "sweetalert2";
+import { convertToJpeg } from "./convertToJpeg";
+
+export const uploadImages = async (
+  event: ChangeEvent<HTMLInputElement>,
+  setImgsUrls: Dispatch<SetStateAction<string[]>>
+) => {
+  if (event.target.files) {
+    const files = Array.from(event.target.files);
+
+    const urls = await Promise.all(
+      files.map(async (e) => {
+        let file = e;
+
+        const pngRgx = /\/png$/;
+        const isPng = pngRgx.test(file.type);
+
+        if (isPng) {
+          const convertedFile = await convertToJpeg(file);
+
+          return new Promise<string>(async (resolve, reject) => {
+            try {
+              const res = await fetch("/api/uploadToCloudinary", {
+                method: "POST",
+                body: JSON.stringify({ data: convertedFile }),
+                headers: { "Content-Type": "application/json" },
+              });
+              const { data } = await res.json();
+              resolve(data.secure_url);
+            } catch (error) {
+              console.error("Error:", error);
+              reject(error);
+            }
+          });
+        } else {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+
+          return new Promise<string>((resolve, reject) => {
+            reader.onloadend = async () => {
+              try {
+                const res = await fetch("/api/uploadToCloudinary", {
+                  method: "POST",
+                  body: JSON.stringify({ data: reader.result }),
+                  headers: { "Content-Type": "application/json" },
+                });
+                const { data } = await res.json();
+                resolve(data.secure_url);
+              } catch (error) {
+                console.error("Error:", error);
+                reject(error);
+              }
+            };
+          });
+        }
+      })
+    );
+
+    setImgsUrls((prevUrls) => [...prevUrls, ...urls]);
+  }
+};
+
+export const handleFileChange = (
+  event: ChangeEvent<HTMLInputElement>,
+  setImages: Dispatch<SetStateAction<string[]>>,
+) => {
+  return new Promise<void>((resolve, reject) => {
+    const files = event.target.files;
+
+    if (files && files.length > 0) {
+      const newPreviews: string[] = [];
+
+      let processedFiles = 0;
+
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          const dataURL = reader.result as string;
+          newPreviews.push(dataURL);
+          processedFiles++;
+
+          if (processedFiles === files.length) {
+            setImages(newPreviews);
+            resolve();
+          }
+        };
+
+        reader.onerror = () => {
+          reject(new Error("Failed to read file"));
+        };
+
+        reader.readAsDataURL(files[i]);
+      }
+    } else {
+      setImages([]);
+      resolve();
+    }
+  });
+};
+
+export const handleCaptionChange = (
+  event: ChangeEvent<HTMLInputElement>,
+  idx: number,
+  imagesCaption: { idx: number; value: string }[],
+  setImagesCaptions: Dispatch<SetStateAction<{ idx: number; value: string }[]>>
+) => {
+  const updatedImages = imagesCaption.map((item, i) => {
+    if (i === idx) {
+      item.value = event.target.value;
+    }
+    return item;
+  });
+
+  const indexExists = imagesCaption.some((item) => item.idx === idx);
+  if (!indexExists) {
+    updatedImages.push({ idx, value: event.target.value });
+  }
+  setImagesCaptions(updatedImages);
+};
+
+export const handleDeleteImage = (
+  event: React.MouseEvent<HTMLButtonElement>,
+  currentIdx: number,
+  setImgsUrls: Dispatch<SetStateAction<string[]>>,
+  setImages: Dispatch<SetStateAction<string[]>>
+) => {
+  event.preventDefault();
+  setImgsUrls((prevUrls) => prevUrls.filter((e, idx) => idx !== currentIdx));
+  setImages((prevImages) => prevImages.filter((e, idx) => idx !== currentIdx));
+};
+
+export const sendData = async (
+  data: Omit<TimelineFormInputs, "_id" | "createdAt">
+) => {
+  try {
+    const response = await fetch("/api/timeline", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      Swal.fire({
+        title: "Error",
+        text: `Error ${response.statusText}`,
+        icon: "error",
+      });
+    }
+
+    return response;
+  } catch (error) {
+    Swal.fire({
+      title: "Error",
+      text: `Error ${error}`,
+      icon: "error",
+    });
+    throw error;
+  }
+};
+
+export const getCurrentDateTimeString = () => {
+  const currentDate = new Date();
+
+  const year = currentDate.getFullYear().toString().padStart(4, '0');
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+  const day = currentDate.getDate().toString().padStart(2, '0');
+  const hours = currentDate.getHours().toString().padStart(2, '0');
+  const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+  const seconds = currentDate.getSeconds().toString().padStart(2, '0');
+  const milliseconds = currentDate.getMilliseconds().toString().padStart(3, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+}
