@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import { debounce } from 'lodash'
 import TimelineForm from '@/components/TimelineForm'
-import { useQuery } from 'react-query';
+import { useInfiniteQuery } from 'react-query';
 import { getTimelines } from '@/utils/getTimelines'
 import CategoriesList from '@/components/CategoriesList'
 
@@ -17,17 +17,21 @@ interface MainboardProps {
   timelineData: TimelineFormInputs[];
 }
 
-const Mainboard: FunctionComponent<MainboardProps> = ({ timelineData }) => {
+const Mainboard: FunctionComponent = () => {
 
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<TimelineFormInputs[] | null>(null)
 
-  const { data, isLoading, isError, error } = useQuery<TimelineFormInputs[]>({
-    queryKey: ['timelines'],
-    queryFn: getTimelines,
-    initialData: timelineData,
-    refetchInterval: 1000 * 60 * 10,
-  })
+  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery<TimelineFormInputs[]>(
+    'timelines',
+    ({ pageParam = 0 }) => getTimelines('timelines', pageParam),
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        if (lastPage.length === 0) return undefined;
+        return allPages.length;
+      },
+    }
+  );
 
   const debouncedHandleSearchBar = debounce((value: string) => {
     setSearchValue(value);
@@ -111,23 +115,32 @@ const Mainboard: FunctionComponent<MainboardProps> = ({ timelineData }) => {
         ) : searchValue && Array.isArray(searchResult) && searchResult.length === 0 ? (
           <p className="text-center text-lg font-bold mt-4">No hay resultados</p>
         ) : (
-          data &&
-          data.length > 0 &&
-          data.map((e) => (
-            <div key={e._id}>
-              <TimeLine
-                tags={Array.isArray(e.tags) ? e.tags : [e.tags]}
-                mainText={e.mainText}
-                length={e.length}
-                timeline={e.photo}
-                createdAt={e.createdAt}
-              />
-            </div>
-          ))
+          <>
+            {data?.pages.map((page) =>
+              page.map((e) => (
+                <div key={e._id}>
+                  <TimeLine
+                    tags={Array.isArray(e.tags) ? e.tags : [e.tags]}
+                    mainText={e.mainText}
+                    length={e.length}
+                    timeline={e.photo}
+                    createdAt={e.createdAt}
+                  />
+                </div>
+              ))
+            )}
+            {isLoading && <p>Loading...</p>}
+            {isError && <p>Error: {JSON.stringify(error)}</p>}
+            {data && isFetchingNextPage && <p>Loading more...</p>}
+            {data && hasNextPage && !isFetchingNextPage && (
+              <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+                Load More
+              </button>
+            )}
+
+          </>
         )}
-
       </div>
-
     </>
   );
 };
