@@ -23,7 +23,7 @@ const TimelineForm: FunctionComponent = () => {
       onMutate: (data) => {
         queryClient.cancelQueries('timelines');
 
-        const currentData = queryClient.getQueryData<TimelineFormInputs[]>('timelines');
+        const currentData = queryClient.getQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines');
 
         const currentPhotos = imgsUrl.map((e, photoIdx: number) => {
           const caption = imagesCaption.find((e) => e.idx === photoIdx)?.value;
@@ -38,6 +38,7 @@ const TimelineForm: FunctionComponent = () => {
           url: images[photo.idx],
         }));
         const newData = {
+          _id: 'newitem',
           createdAt: getCurrentDateTimeString(),
           mainText: data.mainText || "",
           photo: currentPhotosWithUpdatedUrl,
@@ -46,17 +47,19 @@ const TimelineForm: FunctionComponent = () => {
         } as TimelineFormInputs
 
         if (currentData) {
-          queryClient.setQueryData<TimelineFormInputs[]>('timelines', [newData, ...currentData]);
+          // The new data should be added to the first page
+          queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', {
+            ...currentData,
+            pages: [[newData, ...currentData.pages[0]], ...currentData.pages.slice(1)],
+          });
         }
 
         return { previousData: currentData };
       },
 
-
       onError: (error, variables, context) => {
-
         if (context?.previousData) {
-          queryClient.setQueryData<TimelineFormInputs[]>('timelines', context.previousData);
+          queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', context.previousData);
         }
       },
     }

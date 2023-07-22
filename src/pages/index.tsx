@@ -96,8 +96,6 @@ const Mainboard: FunctionComponent = () => {
       <TimelineForm />
 
       <div className="mt-4">
-        {isLoading && <p>Cargando...</p>}
-
         {isError && <p>Error: {JSON.stringify(error)} </p>}
 
         {searchValue && Array.isArray(searchResult) && searchResult.length > 0 ? (

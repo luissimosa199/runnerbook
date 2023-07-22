@@ -38,7 +38,7 @@ const CategoriesList = () => {
     return (
         <div className="">
             <h2 className="text-3xl mb-4">Categorías</h2>
-            <ul className="mb-8 flex flex-wrap justify-around gap-4">
+            <ul className="mb-8 flex flex-wrap justify-around gap-4 px-2">
                 {data!.map((e, idx: number) => {
                     return (
                         <li key={idx}>
