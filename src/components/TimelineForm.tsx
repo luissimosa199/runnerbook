@@ -5,8 +5,7 @@ import { useForm } from "react-hook-form";
 import { TimelineFormInputs } from "@/types";
 import { getCurrentDateTimeString, handleCaptionChange, handleDeleteImage, handleFileChange, sendData, uploadImages } from "../utils/formHelpers";
 import TagsInput from "./TagsInput";
-import { useQueryClient } from 'react-query';
-
+import { useMutation, useQueryClient } from 'react-query';
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -17,6 +16,51 @@ const TimelineForm: FunctionComponent = () => {
   const [loadingImgs, setLoadingImgs] = useState<boolean>(false)
 
   const queryClient = useQueryClient();
+
+  const mutation = useMutation(
+    (data: Omit<TimelineFormInputs, "_id" | "createdAt">) => sendData(data),
+    {
+      onMutate: (data) => {
+        queryClient.cancelQueries('timelines');
+
+        const currentData = queryClient.getQueryData<TimelineFormInputs[]>('timelines');
+
+        const currentPhotos = imgsUrl.map((e, photoIdx: number) => {
+          const caption = imagesCaption.find((e) => e.idx === photoIdx)?.value;
+          return {
+            url: e,
+            idx: photoIdx,
+            caption: caption,
+          };
+        });
+        const currentPhotosWithUpdatedUrl = currentPhotos.map((photo) => ({
+          ...photo,
+          url: images[photo.idx],
+        }));
+        const newData = {
+          createdAt: getCurrentDateTimeString(),
+          mainText: data.mainText || "",
+          photo: currentPhotosWithUpdatedUrl,
+          length: currentPhotos.length,
+          tags: tagsList
+        } as TimelineFormInputs
+
+        if (currentData) {
+          queryClient.setQueryData<TimelineFormInputs[]>('timelines', [newData, ...currentData]);
+        }
+
+        return { previousData: currentData };
+      },
+
+
+      onError: (error, variables, context) => {
+
+        if (context?.previousData) {
+          queryClient.setQueryData<TimelineFormInputs[]>('timelines', context.previousData);
+        }
+      },
+    }
+  );
 
   const {
     register,
@@ -43,28 +87,16 @@ const TimelineForm: FunctionComponent = () => {
       tags: tagsList
     };
 
-    const currentPhotosWithUpdatedUrl = currentPhotos.map((photo) => ({
-      ...photo,
-      url: images[photo.idx],
-    }));
-
-    const newData = {
-      createdAt: getCurrentDateTimeString(),
-      mainText: data.mainText || "",
-      photo: currentPhotosWithUpdatedUrl,
-      length: currentPhotos.length,
-      tags: tagsList
-    } as TimelineFormInputs
-
-    (await sendData(processedData));
-    setTagsList([])
-    setImages([]);
-    setImgsUrls([]);
-    reset();
+    try {
+      await mutation.mutateAsync(processedData)
+      setTagsList([])
+      setImages([]);
+      setImgsUrls([]);
+      reset();
+    } catch (err) {
+      throw err
+    }
     setSubmitBtnDisabled(false)
-
-    const currentData = queryClient.getQueryData<TimelineFormInputs[]>('timelines');
-    queryClient.setQueryData<TimelineFormInputs[]>('timelines', [ newData, ...currentData! ]);
   };
 
   const handleFormKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
