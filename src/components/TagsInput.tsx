@@ -44,14 +44,17 @@ const TagsInput: FunctionComponent<TagsInputProps> = ({ tagsList, setTagsList })
 
     return (
         <div className="flex flex-col gap-2 mb-6 relative">
-            <input
-                type="text"
-                value={inputText}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyPress}
-                placeholder="Agrega una categoría y presiona Enter"
-                className="border rounded px-2 py-1 w-full mb-2"
-            />
+            <div className="relative">
+                <input
+                    type="text"
+                    value={inputText}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyPress}
+                    placeholder="Agrega una categoría y presiona Enter"
+                    className="border rounded px-2 py-1 w-full mb-2"
+                />
+                <button onClick={ (event) => { event.preventDefault(); addTag();}} className="absolute right-2 top-1 text-lg font-bold rounded-full shadow w-6 h-6 leading-4 ">&gt;</button>
+            </div>
             {inputText !== "" && categories.some(e => e.startsWith(inputText)) && (
                 <ul className="absolute top-8 bg-white p-2 w-full border">
                     {categories.filter(e => e.startsWith(inputText)).map((e, idx) => (
