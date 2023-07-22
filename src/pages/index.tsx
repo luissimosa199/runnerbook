@@ -129,12 +129,16 @@ const Mainboard: FunctionComponent = () => {
                 </div>
               ))
             )}
-            {isLoading && <p>Loading...</p>}
+            {isLoading && <p className="w-full bg-slate-100 py-4 text-center">Cargando...</p>}
             {isError && <p>Error: {JSON.stringify(error)}</p>}
-            {data && isFetchingNextPage && <p>Loading more...</p>}
+            {data && isFetchingNextPage && <p className="w-full bg-slate-100 py-4 text-center">Cargando...</p>}
             {data && hasNextPage && !isFetchingNextPage && (
-              <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-                Load More
+              <button
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                className="w-full bg-slate-100 py-4 "
+              >
+                Ver más
               </button>
             )}
 
