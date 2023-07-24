@@ -135,14 +135,9 @@ const TimelineForm: FunctionComponent = () => {
         </div>
       )}
 
-      <button disabled={submitBtnDisabled} className={` ${submitBtnDisabled ? "bg-gray-500" : "bg-blue-500"} text-white px-4 py-2 rounded`} type="submit">
+      <button disabled={submitBtnDisabled} className={` ${submitBtnDisabled ? "bg-blue-300" : "bg-blue-500"} text-white px-4 py-2 rounded`} type="submit">
         Enviar
       </button>
-      <div className="flex text-sm self-center ">
-        <Link href="/" className={`text-blue-500 ml-2`}>
-          Volver
-        </Link>
-      </div>
     </form>
   );
 };
