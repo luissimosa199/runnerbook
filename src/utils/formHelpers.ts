@@ -20,41 +20,25 @@ export const uploadImages = async (
 
         if (isPng) {
           const convertedFile = await convertToJpeg(file);
+          file = convertedFile as File;
+        }
 
-          return new Promise<string>(async (resolve, reject) => {
-            try {
-              const res = await fetch("/api/uploadToCloudinary", {
-                method: "POST",
-                body: JSON.stringify({ data: convertedFile }),
-                headers: { "Content-Type": "application/json" },
-              });
-              const { data } = await res.json();
-              resolve(data.secure_url);
-            } catch (error) {
-              console.error("Error:", error);
-              reject(error);
-            }
-          });
+        // Upload to Cloudinary
+        const url = `https://api.cloudinary.com/v1_1/dahu3rii0/upload`;
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'qxkzlm62');
+
+        const response = await fetch(url, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const jsonResponse = await response.json();
+          return jsonResponse.secure_url;
         } else {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-
-          return new Promise<string>((resolve, reject) => {
-            reader.onloadend = async () => {
-              try {
-                const res = await fetch("/api/uploadToCloudinary", {
-                  method: "POST",
-                  body: JSON.stringify({ data: reader.result }),
-                  headers: { "Content-Type": "application/json" },
-                });
-                const { data } = await res.json();
-                resolve(data.secure_url);
-              } catch (error) {
-                console.error("Error:", error);
-                reject(error);
-              }
-            };
-          });
+          throw new Error('Upload failed');
         }
       })
     );

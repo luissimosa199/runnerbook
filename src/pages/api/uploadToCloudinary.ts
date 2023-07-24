@@ -18,7 +18,7 @@ export default async function handler(
       const fileStr = req.body.data;
       try {
         const uploadedResponse = await cloudinary.v2.uploader.upload(fileStr, {
-          upload_preset: "ml_default",
+          upload_preset: "qxkzlm62",
         });
         if (uploadedResponse) {
           const { api_key, signature, ...responseData } = uploadedResponse;
