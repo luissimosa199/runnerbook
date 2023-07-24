@@ -5,12 +5,13 @@ import { convertToJpeg } from "./convertToJpeg";
 
 export const uploadImages = async (
   event: ChangeEvent<HTMLInputElement>,
-  setImgsUrls: Dispatch<SetStateAction<string[]>>
 ) => {
+  let urls = [];
+
   if (event.target.files) {
     const files = Array.from(event.target.files);
 
-    const urls = await Promise.all(
+    urls = await Promise.all(
       files.map(async (e) => {
         let file = e;
 
@@ -58,7 +59,7 @@ export const uploadImages = async (
       })
     );
 
-    setImgsUrls((prevUrls) => [...prevUrls, ...urls]);
+    return urls
   }
 };
 
@@ -124,11 +125,9 @@ export const handleCaptionChange = (
 export const handleDeleteImage = (
   event: React.MouseEvent<HTMLButtonElement>,
   currentIdx: number,
-  setImgsUrls: Dispatch<SetStateAction<string[]>>,
   setImages: Dispatch<SetStateAction<string[]>>
 ) => {
   event.preventDefault();
-  setImgsUrls((prevUrls) => prevUrls.filter((e, idx) => idx !== currentIdx));
   setImages((prevImages) => prevImages.filter((e, idx) => idx !== currentIdx));
 };
 
@@ -172,4 +171,24 @@ export const getCurrentDateTimeString = () => {
   const milliseconds = currentDate.getMilliseconds().toString().padStart(3, '0');
 
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+}
+
+export const createPhotoData = (paths: string[], imagesCaption: { idx: number; value: string }[]) => {
+  return paths.map((path: string, photoIdx: number) => {
+    const caption = imagesCaption.find((e) => e.idx === photoIdx)?.value;
+    return {
+      url: path,
+      idx: photoIdx,
+      caption: caption,
+    };
+  });
+}
+
+export const createDataObject = (data: { mainText?: string } , photos: any[], tagsList: string[]) => {
+  return {
+    mainText: data.mainText || "",
+    photo: photos,
+    length: photos.length,
+    tags: tagsList
+  };
 }

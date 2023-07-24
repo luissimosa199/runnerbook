@@ -3,66 +3,35 @@ import Image from "next/image";
 import { ChangeEvent, FunctionComponent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TimelineFormInputs } from "@/types";
-import { getCurrentDateTimeString, handleCaptionChange, handleDeleteImage, handleFileChange, sendData, uploadImages } from "../utils/formHelpers";
+import { createDataObject, createPhotoData, handleCaptionChange, handleDeleteImage, handleFileChange, sendData, uploadImages } from "../utils/formHelpers";
 import TagsInput from "./TagsInput";
 import { useMutation, useQueryClient } from 'react-query';
+import useOptimisticUpdate from "@/hooks/useOptimisticUpdate";
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
   const [imagesCaption, setImagesCaptions] = useState<{ idx: number; value: string }[]>([]);
-  const [imgsUrl, setImgsUrls] = useState<string[]>([]);
   const [tagsList, setTagsList] = useState<string[]>([]);
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false)
-  const [loadingImgs, setLoadingImgs] = useState<boolean>(false)
-
+  const optimisticUpdate = useOptimisticUpdate(imagesCaption, tagsList);
+  const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
-    (data: Omit<TimelineFormInputs, "_id" | "createdAt">) => sendData(data),
-    {
-      onMutate: (data) => {
-        queryClient.cancelQueries('timelines');
-
-        const currentData = queryClient.getQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines');
-
-        const currentPhotos = imgsUrl.map((e, photoIdx: number) => {
+    async ({ data, urls }: { data: Omit<TimelineFormInputs, "_id" | "createdAt">; urls: string[] }) => {
+      const payload = {
+        ...data,
+        photo: urls.map((url, photoIdx: number) => {
           const caption = imagesCaption.find((e) => e.idx === photoIdx)?.value;
           return {
-            url: e,
+            url: url,
             idx: photoIdx,
             caption: caption,
           };
-        });
-        const currentPhotosWithUpdatedUrl = currentPhotos.map((photo) => ({
-          ...photo,
-          url: images[photo.idx],
-        }));
-        const newData = {
-          _id: 'newitem',
-          createdAt: getCurrentDateTimeString(),
-          mainText: data.mainText || "",
-          photo: currentPhotosWithUpdatedUrl,
-          length: currentPhotos.length,
-          tags: tagsList
-        } as TimelineFormInputs
-
-        if (currentData) {
-          // The new data should be added to the first page
-          queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', {
-            ...currentData,
-            pages: [[newData, ...currentData.pages[0]], ...currentData.pages.slice(1)],
-          });
-        }
-
-        return { previousData: currentData };
-      },
-
-      onError: (error, variables, context) => {
-        if (context?.previousData) {
-          queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', context.previousData);
-        }
-      },
-    }
+        }),
+      };
+      return sendData(payload);
+    },
   );
 
   const {
@@ -73,33 +42,37 @@ const TimelineForm: FunctionComponent = () => {
   } = useForm<TimelineFormInputs>();
 
   const onSubmit = async (data: TimelineFormInputs) => {
-    setSubmitBtnDisabled(true)
-    const currentPhotos = imgsUrl.map((e, photoIdx: number) => {
-      const caption = imagesCaption.find((e) => e.idx === photoIdx)?.value;
-      return {
-        url: e,
-        idx: photoIdx,
-        caption: caption,
-      };
-    });
 
-    const processedData = {
-      mainText: data.mainText || "",
-      photo: currentPhotos,
-      length: currentPhotos.length,
-      tags: tagsList
-    };
-
-    try {
-      await mutation.mutateAsync(processedData)
-      setTagsList([])
-      setImages([]);
-      setImgsUrls([]);
-      reset();
-    } catch (err) {
-      throw err
+    if (data.mainText === '' && data.photo?.length === 0) {
+      console.log('EMPTY FORM')
+      return
     }
-    setSubmitBtnDisabled(false)
+
+    setSubmitBtnDisabled(true)
+    const previewPhotos = createPhotoData(images, imagesCaption)
+    const previewData = createDataObject(data, previewPhotos, tagsList)
+    const { previousData } = optimisticUpdate({ data: previewData, images: images });
+
+    setTagsList([])
+    setImages([]);
+    reset();
+
+    if (imageUploadPromise) {
+      const urls = await imageUploadPromise;
+      const currentPhotos = createPhotoData(urls, imagesCaption)
+      const processedData = createDataObject(data, currentPhotos, tagsList)
+      setImageUploadPromise(null);
+
+      try {
+        await mutation.mutateAsync({ data: processedData, urls })
+      } catch (err) {
+        if (previousData) {
+          queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', previousData);
+        }
+        throw err
+      }
+      setSubmitBtnDisabled(false)
+    }
   };
 
   const handleFormKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
@@ -110,11 +83,10 @@ const TimelineForm: FunctionComponent = () => {
 
   const handleUploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
     setSubmitBtnDisabled(true);
-    setLoadingImgs(true);
-    await handleFileChange(event, setImages);
-    await uploadImages(event, setImgsUrls);
+    (await handleFileChange(event, setImages));
     setSubmitBtnDisabled(false);
-    setLoadingImgs(false);
+    const uploadPromise = uploadImages(event);
+    setImageUploadPromise(uploadPromise);
   };
 
   return (
@@ -144,13 +116,11 @@ const TimelineForm: FunctionComponent = () => {
 
       <TagsInput tagsList={tagsList} setTagsList={setTagsList} />
 
-      {loadingImgs && <p className="my-2">Subiendo imágenes...</p>}
-
       {images.length > 0 && (
         <div className="flex flex-col">
           {images.map((e, idx) => (
             <div key={idx}>
-              <button className="text-xs" onClick={(event) => handleDeleteImage(event, idx, setImgsUrls, setImages)}>
+              <button className="text-xs" onClick={(event) => handleDeleteImage(event, idx, setImages)}>
                 Borrar
               </button>
               <Image src={e} alt={`Thumbnail ${idx}`} className="mt-2" width={834} height={834} />
