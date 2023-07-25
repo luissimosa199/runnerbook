@@ -11,6 +11,7 @@ export interface TimeLineEntryProps {
 }
 
 export interface TimeLineProps {
+  _id: string;
   length: number;
   timeline?: TimeLineEntryData[];
   mainText?: string;

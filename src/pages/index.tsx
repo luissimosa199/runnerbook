@@ -102,6 +102,7 @@ const Mainboard: FunctionComponent = () => {
           searchResult.map((e) => (
             <div key={e._id}>
               <TimeLine
+                _id={e._id}
                 tags={Array.isArray(e.tags) ? e.tags : [e.tags]}
                 mainText={e.mainText}
                 length={e.length}
@@ -118,6 +119,7 @@ const Mainboard: FunctionComponent = () => {
               page.map((e) => (
                 <div key={e._id}>
                   <TimeLine
+                    _id={e._id}
                     tags={Array.isArray(e.tags) ? e.tags : [e.tags]}
                     mainText={e.mainText}
                     length={e.length}
