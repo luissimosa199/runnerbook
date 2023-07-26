@@ -1,15 +1,9 @@
-import { convertToJpeg } from "./convertToJpeg";
 import {
-  uploadImages,
-  handleFileChange,
-  handleCaptionChange,
   handleDeleteImage,
-  sendData,
   getCurrentDateTimeString,
   createPhotoData,
   createDataObject,
 } from "./formHelpers";
-import { ChangeEvent } from "react";
 
 jest.mock("./convertToJpeg", () => ({
   convertToJpeg: jest.fn().mockImplementation((file: any) => file),
@@ -20,12 +14,6 @@ jest.mock("sweetalert2", () => ({
 }));
 
 describe("formHelpers", () => {
-  // uploadImages()**
-
-  // handleFileChange()**
-
-  // handleCaptionChange()**
-
   // handleDeleteImage()
 
   describe("handleDeleteImage", () => {
@@ -46,8 +34,6 @@ describe("formHelpers", () => {
       expect(event.preventDefault).toHaveBeenCalled();
     });
   });
-
-  // sendData()
 
   // getCurrentDateTimeString()
 
