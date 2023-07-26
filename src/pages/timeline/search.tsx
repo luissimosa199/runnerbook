@@ -28,7 +28,7 @@ const Search: FunctionComponent<SearchProps> = ({ timelineData }) => {
                 {timelineData && timelineData.length > 0 && timelineData.map((e) => {
                     return (
                         <div key={e._id}>
-                            <TimeLine tags={e.tags} mainText={e.mainText} length={e.length} timeline={e.photo} createdAt={e.createdAt} />
+                            <TimeLine _id={e._id} tags={e.tags} mainText={e.mainText} length={e.length} timeline={e.photo} createdAt={e.createdAt} />
                         </div>
                     )
                 })}

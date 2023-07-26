@@ -29,7 +29,7 @@ const TimelinePage: FunctionComponent<TimelinePageProps> = ({ timelineData }) =>
       />
       <div>
         <div key={timelineData._id}>
-          <TimeLine tags={timelineData.tags} mainText={timelineData.mainText} length={timelineData.length} timeline={timelineData.photo} createdAt={timelineData.createdAt} />
+          <TimeLine _id={timelineData._id} tags={timelineData.tags} mainText={timelineData.mainText} length={timelineData.length} timeline={timelineData.photo} createdAt={timelineData.createdAt} />
         </div>
       </div>
     </>

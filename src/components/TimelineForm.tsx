@@ -56,6 +56,8 @@ const TimelineForm: FunctionComponent = () => {
     setImages([]);
     reset();
 
+    console.log('1')
+
     if (imageUploadPromise) {
       const urls = await imageUploadPromise;
       const currentPhotos = createPhotoData(urls, imagesCaption)
@@ -64,6 +66,15 @@ const TimelineForm: FunctionComponent = () => {
 
       try {
         await mutation.mutateAsync({ data: processedData, urls })
+      } catch (err) {
+        if (previousData) {
+          queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', previousData);
+        }
+        throw err
+      }
+    } else {
+      try {
+        await mutation.mutateAsync({ data: previewData, urls: [] })
       } catch (err) {
         if (previousData) {
           queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', previousData);

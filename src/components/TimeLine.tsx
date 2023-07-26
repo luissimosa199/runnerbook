@@ -28,8 +28,6 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
             <div className="">
                 <div className="flex gap-4">
                     <h1 className="ml-1 text-lg">{mainText}</h1>
-                    <Link href={`/timeline/edit/${_id}`}>E</Link>
-                    <Link href={`/timeline/delete/${_id}`} className="ml-auto mr-2	">B</Link>
                 </div>
                 <p className="ml-1 text-left text-xs">
                     {tags && tags.length > 0 && tags.join(', ')}

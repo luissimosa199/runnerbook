@@ -8,7 +8,6 @@ const Edit = () => {
 
     const [tagsList, setTagsList] = useState<string[]>([]);
     const [mainText, setMainText] = useState<string>('');
-    const [timelineData, setTimelineData] = useState<any>({});
     const [photo, setPhoto] = useState<TimeLineEntryData[]>([]);
 
     const router = useRouter()
@@ -18,8 +17,6 @@ const Edit = () => {
         const fetchTimelineData = async () => {
             const response = await fetch(`/api/timeline/${id}`);
             const timelineData = await response.json()
-
-            setTimelineData(timelineData);
             setTagsList(timelineData.tags);
             setMainText(timelineData.mainText);
             setPhoto(timelineData.photo);
@@ -40,7 +37,14 @@ const Edit = () => {
         // const data = await response.json()
         // console.log(data)
 
-        console.log("INIT DATA: ", timelineData)
+        const processedData = {
+            mainText: mainText,
+            photo: photo,
+            length: photo.length,
+            tags: tagsList
+        }
+
+        console.log("DATA: ", processedData)
 
     };
 
@@ -53,6 +57,13 @@ const Edit = () => {
         newPhoto[index].caption = event.target.value;
         setPhoto(newPhoto);
     }
+
+    const handleDeleteImage = (index: number) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        const newPhoto = photo.filter((_, photoIndex) => photoIndex !== index);
+        setPhoto(newPhoto);
+    }
+
 
     return (
         <div>
@@ -67,7 +78,8 @@ const Edit = () => {
                 <div>
                     {photo && photo.map((e: TimeLineEntryData, index: number) => {
                         return (
-                            <div key={e.idx}>
+                            <div key={index}>
+                                <button onClick={handleDeleteImage(index)}>X</button>
                                 <Image src={e.url} alt="" width={100} height={100} />
                                 <input type="text" value={e.caption} onChange={handleCaptionChange(index)} />
                             </div>
