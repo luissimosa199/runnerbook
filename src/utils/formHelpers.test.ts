@@ -14,6 +14,7 @@ jest.mock("sweetalert2", () => ({
 }));
 
 describe("formHelpers", () => {
+    
   // handleDeleteImage()
 
   describe("handleDeleteImage", () => {

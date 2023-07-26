@@ -6,20 +6,19 @@ import Head from "next/head";
 import ShareButtons from "./ShareButtons";
 import HeadMetaTags from "./HeadMetaTags";
 import formatDateString from "@/utils/formatDateString";
-import Link from "next/link";
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id }) => {
 
-    const baseUrl = "https://doxa-board.vercel.app"
+    const baseUrl = "https://doxa-board-dev.vercel.app"
     const router = useRouter()
-    const timeLineUrl = baseUrl + router.pathname
+    const timeLineUrl = baseUrl + `/timeline/${_id}`
 
     return (
         <div className="mb-4 max-w-[850px] mx-auto">
             <Head>
                 <HeadMetaTags
                     timeline={timeline}
-                    timelineName={mainText || ''}
+                    timelineName={mainText?.slice(0, 50) || ''}
                     timeLineUrl={timeLineUrl}
                     message="Mira mi TimeLine"
                     siteName="doxa-board"
@@ -33,7 +32,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                     {tags && tags.length > 0 && tags.join(', ')}
                 </p>
                 <p className="ml-1 text-left">{formatDateString(createdAt)}</p>
-                <ShareButtons url={timeLineUrl} title={` Te comparto este timeline: ${mainText} `} />
+                <ShareButtons url={timeLineUrl} title={` Te comparto este timeline: ${mainText?.slice(0, 50)} `} />
             </div>
             {timeline && timeline.map((e: TimeLineEntryData,) =>
                 <TimeLineEntry
