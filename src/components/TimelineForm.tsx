@@ -56,8 +56,6 @@ const TimelineForm: FunctionComponent = () => {
     setImages([]);
     reset();
 
-    console.log('1')
-
     if (imageUploadPromise) {
       const urls = await imageUploadPromise;
       const currentPhotos = createPhotoData(urls, imagesCaption)
@@ -81,8 +79,8 @@ const TimelineForm: FunctionComponent = () => {
         }
         throw err
       }
-      setSubmitBtnDisabled(false)
     }
+    setSubmitBtnDisabled(false)
   };
 
   const handleFormKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {

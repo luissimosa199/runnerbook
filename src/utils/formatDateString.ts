@@ -4,6 +4,7 @@ export default function formatDateString(dateString: string): string {
     day: "numeric",
     month: "long",
     year: "numeric",
+    timeZone: "UTC",
   };
   return date.toLocaleDateString("es-ES", options);
 }
