@@ -36,7 +36,6 @@ const TimelineForm: FunctionComponent = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
   } = useForm<TimelineFormInputs>();
 
@@ -102,7 +101,7 @@ const TimelineForm: FunctionComponent = () => {
 
       <div className="flex flex-col">
         <label htmlFor="mainText" className="relative flex flex-col">
-          <textarea className="border rounded h-10 p-1" id="mainText" {...register("mainText")} />
+          <textarea placeholder="Escribe algo acá" className="border rounded h-10 p-1" id="mainText" {...register("mainText")} />
         </label>
       </div>
 
@@ -118,7 +117,6 @@ const TimelineForm: FunctionComponent = () => {
             onChange={handleUploadImages}
           />
         </label>
-        {errors.photo && <span className="text-red-500">Sube tus fotos</span>}
       </div>
 
       <TagsInput tagsList={tagsList} setTagsList={setTagsList} />

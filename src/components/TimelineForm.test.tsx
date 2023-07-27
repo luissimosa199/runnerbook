@@ -12,7 +12,6 @@ const queryClient = new QueryClient();
 describe('TimelineForm', () => {
 
     it('does not submit when form is empty', async () => {
-        // Mock the fetch response
         fetchMock.mockResponseOnce(JSON.stringify({ /* your expected response here */ }));
 
         await act(async () => {
@@ -36,6 +35,6 @@ describe('TimelineForm', () => {
     // more test
 
     afterEach(() => {
-        jest.restoreAllMocks();
+        fetchMock.resetMocks();
     });
 })

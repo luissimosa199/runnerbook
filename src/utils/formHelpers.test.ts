@@ -3,7 +3,9 @@ import {
   getCurrentDateTimeString,
   createPhotoData,
   createDataObject,
+  sendData,
 } from "./formHelpers";
+import fetchMock from "jest-fetch-mock";
 
 jest.mock("./convertToJpeg", () => ({
   convertToJpeg: jest.fn().mockImplementation((file: any) => file),
@@ -13,8 +15,9 @@ jest.mock("sweetalert2", () => ({
   fire: jest.fn(),
 }));
 
+global.fetch = fetchMock as any;
+
 describe("formHelpers", () => {
-    
   // handleDeleteImage()
 
   describe("handleDeleteImage", () => {
@@ -33,6 +36,64 @@ describe("formHelpers", () => {
 
       expect(newImages).toEqual(["image1", "image3"]);
       expect(event.preventDefault).toHaveBeenCalled();
+    });
+  });
+
+  // getData()
+
+  describe("sendData", () => {
+    afterEach(() => {
+      fetchMock.resetMocks();
+    });
+
+    it("should make the POST request with main text and empty photo array", async () => {
+      const mockData = {
+        mainText: "Prueba",
+        photo: [],
+        length: 0,
+        tags: ["tag1", "tag2"],
+      };
+
+      fetchMock.mockResponseOnce(JSON.stringify({ message: "Success" }));
+
+      const response = await sendData(mockData);
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/api/timeline",
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify(mockData),
+        })
+      );
+
+      const responseData = await response.json();
+      expect(responseData).toEqual({ message: "Success" });
+    });
+
+    it("should make the POST request with empty main text and non-empty photo array", async () => {
+      const mockData = {
+        mainText: "",
+        photo: [{ url: "https://image.img", idx: 0, caption: "prueba" }],
+        length: 1,
+        tags: ["tag1", "tag2"],
+      };
+
+      fetchMock.mockResponseOnce(JSON.stringify({ message: "Success" }));
+
+      const response = await sendData(mockData);
+
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/api/timeline",
+        expect.objectContaining({
+          method: "POST",
+          body: JSON.stringify(mockData),
+        })
+      );
+
+      const responseData = await response.json();
+      expect(responseData).toEqual({ message: "Success" });
     });
   });
 
