@@ -43,7 +43,6 @@ const TimelineForm: FunctionComponent = () => {
   const onSubmit = async (data: TimelineFormInputs) => {
 
     if (data.mainText === '' && data.photo?.length === 0) {
-      console.log('EMPTY FORM')
       return
     }
 
