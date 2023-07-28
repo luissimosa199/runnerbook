@@ -86,6 +86,47 @@ export const handleFileChange = (
   });
 };
 
+export const handleFileAdding = (
+  event: ChangeEvent<HTMLInputElement>,
+  setImages: Dispatch<SetStateAction<string[]>>,
+) => {
+  return new Promise<void>((resolve, reject) => {
+    const files = event.target.files;
+
+    if (files && files.length > 0) {
+      let newPreviews: string[] = [];
+
+      let processedFiles = 0;
+
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+          const dataURL = reader.result as string;
+          newPreviews.push(dataURL);
+          processedFiles++;
+
+          if (processedFiles === files.length) {
+            // Add the new previews to the existing images
+            setImages((prevImages) => [...prevImages, ...newPreviews]);
+            resolve();
+          }
+        };
+
+        reader.onerror = () => {
+          reject(new Error("Failed to read file"));
+        };
+
+        reader.readAsDataURL(files[i]);
+      }
+    } else {
+      setImages([]);
+      resolve();
+    }
+  });
+};
+
+
 export const handleCaptionChange = (
   event: ChangeEvent<HTMLInputElement>,
   idx: number,
@@ -121,6 +162,34 @@ export const sendData = async (
   try {
     const response = await fetch("/api/timeline", {
       method: "POST",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      Swal.fire({
+        title: "Error",
+        text: `Error ${response.statusText}`,
+        icon: "error",
+      });
+    }
+
+    return response;
+  } catch (error) {
+    Swal.fire({
+      title: "Error",
+      text: `Error ${error}`,
+      icon: "error",
+    });
+    throw error;
+  }
+};
+
+export const editData = async (
+  data: Omit<TimelineFormInputs, "createdAt">
+) => {
+  try {
+    const response = await fetch(`/api/timeline/${data._id}`, {
+      method: "PUT",
       body: JSON.stringify(data),
     });
 

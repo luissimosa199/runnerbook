@@ -6,6 +6,7 @@ import { createDataObject, createPhotoData, handleCaptionChange, handleDeleteIma
 import TagsInput from "./TagsInput";
 import { useMutation, useQueryClient } from 'react-query';
 import useOptimisticUpdate from "@/hooks/useOptimisticUpdate";
+import PhotoInput from "./PhotoInput";
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -106,17 +107,7 @@ const TimelineForm: FunctionComponent = () => {
       </div>
 
       <div className="flex flex-col">
-        <label htmlFor="photo" className="relative flex flex-col">
-          Fotos:
-          <input
-            className="border rounded h-10 p-1"
-            type="file"
-            id="photo"
-            multiple
-            {...register("photo")}
-            onChange={handleUploadImages}
-          />
-        </label>
+          <PhotoInput handleUploadImages={handleUploadImages} register={register} />
       </div>
 
       <TagsInput tagsList={tagsList} setTagsList={setTagsList} />

@@ -1,7 +1,23 @@
 import { modelOptions, prop } from "@typegoose/typegoose";
 import { nanoid } from "nanoid";
 
-@modelOptions({ options: { allowMixed: 0 } })
+export class Photo {
+  @prop({ required: true })
+  url: string;
+
+  @prop({ required: true })
+  idx: number;
+
+  @prop({ default: "" })
+  caption?: string;
+}
+
+@modelOptions({
+  schemaOptions: {
+    timestamps: true,
+  },
+  options: { allowMixed: 0 },
+})
 export class Timeline {
   @prop({ default: () => nanoid(9) })
   _id: string;
@@ -9,11 +25,11 @@ export class Timeline {
   @prop()
   mainText: string;
 
-  @prop({ required: true})
+  @prop({ required: true })
   length: number;
 
-  @prop()
-  photo?: { url: string, idx: number, caption?: string }[];
+  @prop({ _id: false, type: () => [Photo] })
+  photo?: Photo[];
 
   @prop({ default: () => new Date() })
   createdAt: Date;

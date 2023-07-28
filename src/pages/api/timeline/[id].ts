@@ -1,9 +1,6 @@
 import { TimeLineModel } from "../../../db/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../db/dbConnect";
-import { TimelineFormInputs } from "@/types";
-
-type UpdateTodoBody = Partial<TimelineFormInputs>;
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,23 +16,29 @@ export default async function handler(
       res.status(404);
     }
   } else if (req.method === "PUT") {
-    const body = req.body as UpdateTodoBody;
+    const body = JSON.parse(req.body);
     const timeline = await TimeLineModel.findById(id);
+
     if (timeline) {
-      timeline.set({ ...body });
-      await timeline.save();
-      res.status(200).json(timeline.toJSON());
+      console.log("Updating timeline with id:", id);
+      console.log("Update body:", body);
+
+      const updateResult = await TimeLineModel.updateMany({ _id: id }, { $set: body })
+        .catch(err => {
+          console.error("Update Error:", err);
+          res.status(500).json({ error: "Update Error" });
+        });
+
+      console.log("Update Result:", updateResult);
+
+      const updatedTimeline = await TimeLineModel.findById(id);
+
+      if (updatedTimeline) {
+        res.status(200).json(updatedTimeline);
+        console.log(body, updatedTimeline)
+      }
     } else {
-      res.status(404);
+      res.status(404).send({ message: 'Timeline not found' });
     }
-  } else if (req.method === "DELETE") {
-    const timeline = await TimeLineModel.findByIdAndRemove(id);
-    if (timeline) {
-      res.status(200).json(timeline.toJSON());
-    } else {
-      res.status(404);
-    }
-  } else {
-    res.status(405).json({ error: "Method not allowed" });
   }
 }
