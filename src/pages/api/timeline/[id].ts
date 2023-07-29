@@ -20,25 +20,21 @@ export default async function handler(
     const timeline = await TimeLineModel.findById(id);
 
     if (timeline) {
-      console.log("Updating timeline with id:", id);
-      console.log("Update body:", body);
-
-      const updateResult = await TimeLineModel.updateMany({ _id: id }, { $set: body })
-        .catch(err => {
-          console.error("Update Error:", err);
-          res.status(500).json({ error: "Update Error" });
-        });
-
-      console.log("Update Result:", updateResult);
+      const updateResult = await TimeLineModel.updateMany(
+        { _id: id },
+        { $set: body }
+      ).catch((err) => {
+        console.error("Update Error:", err);
+        res.status(500).json({ error: "Update Error" });
+      });
 
       const updatedTimeline = await TimeLineModel.findById(id);
 
       if (updatedTimeline) {
         res.status(200).json(updatedTimeline);
-        console.log(body, updatedTimeline)
       }
     } else {
-      res.status(404).send({ message: 'Timeline not found' });
+      res.status(404).send({ message: "Timeline not found" });
     }
   }
 }

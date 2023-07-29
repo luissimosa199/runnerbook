@@ -1,5 +1,7 @@
 import { fetchCategories } from "@/utils/getCategories";
-import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from "react";
+import { faGreaterThan, faX } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useRef, useState } from "react";
 
 interface TagsInputProps {
     tagsList: string[]
@@ -9,6 +11,7 @@ interface TagsInputProps {
 const TagsInput: FunctionComponent<TagsInputProps> = ({ tagsList, setTagsList }) => {
     const [inputText, setInputText] = useState("");
     const [categories, setCategories] = useState<string[]>([])
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(event.target.value);
@@ -43,22 +46,29 @@ const TagsInput: FunctionComponent<TagsInputProps> = ({ tagsList, setTagsList })
     }, [])
 
     return (
-        <div className="flex flex-col gap-2 mb-6 relative">
+        <div className="flex flex-col gap-2 relative">
             <div className="relative">
                 <input
+                    ref={inputRef}
                     type="text"
                     value={inputText}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyPress}
                     placeholder="Agrega una categoría y presiona Enter"
-                    className="border rounded px-2 py-1 w-full mb-2"
+                    className="border rounded px-3 py-2 w-full mb-2"
                 />
-                <button onClick={ (event) => { event.preventDefault(); addTag();}} className="absolute right-2 top-1 text-lg font-bold rounded-full shadow w-6 h-6 leading-4 ">&gt;</button>
+                <button onClick={(event) => {
+                    event.preventDefault();
+                    addTag();
+                    if (inputRef.current) inputRef.current.focus();
+                }} className="absolute right-2 top-2 text-lg font-bold rounded-full shadow w-6 h-6 leading-4 text-blue-500 border border-blue-500 bg-white hover:bg-blue-200 hover:text-blue-700">
+                    <FontAwesomeIcon icon={faGreaterThan} />
+                </button>
             </div>
             {inputText !== "" && categories.some(e => e.startsWith(inputText)) && (
-                <ul className="absolute top-8 bg-white p-2 w-full border">
+                <ul className="absolute top-8 bg-white p-2 w-full border border-gray-300 rounded-md shadow-lg">
                     {categories.filter(e => e.startsWith(inputText)).map((e, idx) => (
-                        <li key={idx} className="">
+                        <li key={idx} className="p-1 hover:bg-gray-100">
                             <button
                                 onClick={(event) => { event.preventDefault(); setTagsList([...tagsList, e]); setInputText('') }}
                                 className="hover:text-blue-500 w-full text-left"
@@ -72,20 +82,21 @@ const TagsInput: FunctionComponent<TagsInputProps> = ({ tagsList, setTagsList })
 
             <ul className="flex flex-wrap gap-2">
                 {tagsList.map((e, idx) => (
-                    <li key={idx} className="bg-blue-300 rounded-full pl-2" >
-                        <span>
+                    <li key={idx} className="bg-blue-300 rounded-full pl-2 pr-2 py-1 flex items-center gap-2 text-sm" >
+                        <span className="mb-1">
                             {e}
                         </span>
                         <button
-                            className="ml-2 text-xs bg-transparent font-bold w-6 h-6 border-2 bg-white rounded-full text-blue-500"
+                            className="text-xs bg-transparent font-bold w-5 h-5 border-2 bg-white rounded-full text-blue-500 hover:bg-blue-200 hover:border-blue-700"
                             onClick={(event) => { event.preventDefault(); setTagsList(tagsList.filter(tag => tag !== e)) }}
                         >
-                            X
+                            <FontAwesomeIcon icon={faX} />
                         </button>
                     </li>
                 ))}
             </ul>
         </div>
+
     );
 };
 

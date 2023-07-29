@@ -6,6 +6,8 @@ import { TimeLineEntryData, TimelineFormInputs } from "@/types";
 import PhotoInput from "@/components/PhotoInput";
 import { editData, handleFileAdding, uploadImages } from "@/utils/formHelpers";
 import { useMutation, useQueryClient } from "react-query";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faX } from '@fortawesome/free-solid-svg-icons';
 
 const Edit = () => {
 
@@ -56,10 +58,47 @@ const Edit = () => {
                 length: newPhotos.length,
             };
 
-            queryClient.invalidateQueries('timelines')
-            router.push('http://localhost:3000/')
             return editData(payload);
         },
+
+        {
+            onMutate: async ({ data, urls }) => {
+
+                router.push('http://localhost:3000/')
+
+                await queryClient.cancelQueries('timelines');
+                const previousTimelines = queryClient.getQueryData<TimelineFormInputs[]>(['timelines']);
+                const newTimelineData: Omit<TimelineFormInputs, "createdAt"> = {
+                    ...data,
+                    _id: id as string,
+                    photo: [
+                        ...(data.photo || []),
+                        ...urls.map((url, urlIdx) => ({
+                            url: url,
+                            idx: data.length + urlIdx,
+                            caption: newImageCaptions[urlIdx] || '',
+                        })),
+                    ],
+                    length: data.length + urls.length,
+                };
+                queryClient.setQueryData<Omit<TimelineFormInputs, "createdAt">[]>(['timelines'], (old) =>
+                    old?.map((timeline) => {
+                        if (timeline._id === id) {
+                            return newTimelineData;
+                        }
+                        return timeline;
+                    }) || []
+                );
+
+                return { previousTimelines };
+            },
+            // On failure, roll back to the previous value
+            onError: (err, variables, context) => {
+                if (context?.previousTimelines) {
+                    queryClient.setQueryData<TimelineFormInputs[]>(['timelines'], context.previousTimelines);
+                }
+            },
+        }
     );
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -73,17 +112,17 @@ const Edit = () => {
         }
 
         if (imageUploadPromise) {
-
-            (await imageUploadPromise)
+            await imageUploadPromise;
             setImageUploadPromise(null);
+        }
 
-            try {
-                await mutation.mutateAsync({ data: processedData, urls: uploadedImages })
-            } catch (err) {
-                throw err
-            }
+        try {
+            await mutation.mutateAsync({ data: processedData, urls: uploadedImages })
+        } catch (err) {
+            throw err;
         }
     };
+
 
     const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
         setMainText(event.target.value);
@@ -105,14 +144,11 @@ const Edit = () => {
         setPhoto(newPhoto);
     };
 
-
-
     const handleNewImageCaptionChange = (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
         const newCaptions = [...newImageCaptions];
         newCaptions[index] = event.target.value;
         setNewImageCaptions(newCaptions);
     };
-
 
     const handleUploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
         (await handleFileAdding(event, setNewImages));
@@ -123,44 +159,40 @@ const Edit = () => {
         setNewImageCaptions(prevCaptions => [...prevCaptions, ...urls.map(_ => '')]);
     };
 
-
-
     return (
-        <div>
-            <h1 className="text-3xl mb-4">Edit: {id}</h1>
-
-            <form onSubmit={handleSubmit} className="border-2 flex flex-col gap-2 p-4">
-                <label htmlFor="mainText">Texto</label>
-                <input type="text" value={mainText} onChange={handleTextChange} className="border" />
-
+        <div className="container mx-auto p-4">
+            <h1 className="text-3xl mb-4">Editar</h1>
+            <form onSubmit={handleSubmit} className="bg-white border-2 rounded-md flex flex-col gap-4 p-4">
+                <label htmlFor="mainText" className="text-lg font-semibold">Texto</label>
+                <input type="text" value={mainText} onChange={handleTextChange} className="border p-2 rounded-md" />
                 <TagsInput tagsList={tagsList} setTagsList={setTagsList} />
-
                 <PhotoInput handleUploadImages={handleUploadImages} />
-
-                <div>
-                    {photo && photo.map((e: TimeLineEntryData, index: number) => {
-                        return (
-                            <div key={index}>
-                                <button onClick={handleDeleteImage(index)}>X</button>
+                <div className="flex flex-col gap-2">
+                    {photo && photo.map((e: TimeLineEntryData, index: number) => (
+                        <div key={index} className="flex flex-col min-[470px]:flex-row items-center gap-2 md:justify-center">
+                            <div className="flex gap-2 items-center mr-[25px] min-[470px]:mr-0">
+                                <button onClick={handleDeleteImage(index)} className="bg-red-500 text-white p-1 w-7 h-7 rounded-full">
+                                    <FontAwesomeIcon icon={faX} style={{ marginBottom: '2px' }} />
+                                </button>
                                 <Image src={e.url} alt="" width={100} height={100} />
-                                <input type="text" value={e.caption || ''} onChange={handleCaptionChange(index)} />
                             </div>
-                        )
-                    })}
-                    {
-                        newImages && newImages.map((e: string, index: number) => {
-                            return (
-                                <div key={index}>
-                                    <button onClick={handleDeleteImage(index)}>X</button>
-                                    <Image src={e} alt="" width={100} height={100} />
-                                    <input type="text" value={newImageCaptions[index] || ''} onChange={handleNewImageCaptionChange(index)} />
-                                </div>
-                            )
-                        })
-                    }
+                            <input type="text" value={e.caption || ''} onChange={handleCaptionChange(index)} className="border p-2 rounded-md w-full min-[470px]:w-[65%] min-[470px]:mx-auto md:mx-0 " />
+                        </div>
+                    ))}
+                    {newImages && newImages.map((e: string, index: number) => (
+                        <div key={index} className="flex flex-col min-[470px]:flex-row items-center gap-2 bg-gray-100 p-2 rounded-md md:justify-center">
+                            <div className="flex gap-2 items-center mr-[25px] min-[470px]:mr-0">
+                                <button onClick={handleDeleteImage(index)} className="bg-red-500 text-white p-1 w-7 h-7 rounded-full">
+                                    <FontAwesomeIcon icon={faX} style={{ marginBottom: '2px' }} />
+                                </button>
+                                <Image src={e} alt="" width={100} height={100} />
+                            </div>
+                            <input type="text" value={newImageCaptions[index] || ''} onChange={handleNewImageCaptionChange(index)} className="border p-2 rounded-md w-full min-[470px]:w-[65%] min-[470px]:mx-auto border-blue-500 md:mx-0 " />
+                        </div>
+                    ))}
                 </div>
 
-                <button type="submit">Enviar</button>
+                <button type="submit" className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Enviar</button>
             </form>
         </div>
     )

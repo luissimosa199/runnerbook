@@ -97,31 +97,31 @@ const TimelineForm: FunctionComponent = () => {
   };
 
   return (
-    <form onKeyDown={handleFormKeyDown} onSubmit={handleSubmit(onSubmit)} className="border flex flex-col gap-2 p-4 rounded max-w-[850px] mx-auto">
-      <h1 className="text-xl font-bold">Subir nuevo Timeline</h1>
+    <form onKeyDown={handleFormKeyDown} onSubmit={handleSubmit(onSubmit)} className="border-2 border-gray-300 flex flex-col gap-4 p-6 rounded max-w-[850px] mx-auto shadow-sm">
+      <h1 className="text-2xl font-semibold mb-2">Subir nuevo Timeline</h1>
 
       <div className="flex flex-col">
         <label htmlFor="mainText" className="relative flex flex-col">
-          <textarea placeholder="Escribe algo acá" className="border rounded h-10 p-1" id="mainText" {...register("mainText")} />
+          <textarea placeholder="Escribe algo acá" className="border rounded h-32 p-3 text-md resize-none" id="mainText" {...register("mainText")} />
         </label>
       </div>
 
       <div className="flex flex-col">
-          <PhotoInput handleUploadImages={handleUploadImages} register={register} />
+        <PhotoInput handleUploadImages={handleUploadImages} register={register} />
       </div>
 
       <TagsInput tagsList={tagsList} setTagsList={setTagsList} />
 
       {images.length > 0 && (
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-2">
           {images.map((e, idx) => (
             <div key={idx}>
-              <button className="text-xs" onClick={(event) => handleDeleteImage(event, idx, setImages)}>
+              <button className="text-xs text-red-500 mb-1" onClick={(event) => handleDeleteImage(event, idx, setImages)}>
                 Borrar
               </button>
-              <Image src={e} alt={`Thumbnail ${idx}`} className="mt-2" width={834} height={834} />
+              <Image src={e} alt={`Thumbnail ${idx}`} className="mt-2 rounded shadow-md" width={834} height={834} />
               <input
-                className="border w-full mb-1 p-1 placeholder:text-sm "
+                className="border w-full mb-1 p-2 placeholder:text-sm rounded-md"
                 placeholder="Agrega un texto a esta foto"
                 type="text"
                 onChange={(event) => handleCaptionChange(event, idx, imagesCaption, setImagesCaptions)}
@@ -131,10 +131,11 @@ const TimelineForm: FunctionComponent = () => {
         </div>
       )}
 
-      <button disabled={submitBtnDisabled} className={` ${submitBtnDisabled ? "bg-blue-300" : "bg-blue-500"} text-white px-4 py-2 rounded`} type="submit">
+      <button disabled={submitBtnDisabled} className={` ${submitBtnDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} text-white px-4 py-2 rounded`} type="submit">
         Enviar
       </button>
     </form>
+
   );
 };
 
