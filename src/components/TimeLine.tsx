@@ -39,12 +39,12 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                 <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
                 <div className="mt-4 flex justify-between items-center">
                     <ShareButtons url={timeLineUrl} title={`Te comparto este timeline: ${mainText?.slice(0, 50)}`} />
-                    <Link
+                    {_id !== "newitem" && <Link
                         className="text-blue-500 hover:text-blue-700 transition ease-in-out duration-150"
                         href={`/timeline/edit/${_id}`}
                     >
                         <FontAwesomeIcon icon={faPenToSquare} size="lg" />
-                    </Link>
+                    </Link>}
                 </div>
                 <div className="mt-6">
                     {timeline && timeline.map((e: TimeLineEntryData,) =>

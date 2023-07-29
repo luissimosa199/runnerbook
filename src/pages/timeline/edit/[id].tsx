@@ -8,6 +8,7 @@ import { editData, handleFileAdding, uploadImages } from "@/utils/formHelpers";
 import { useMutation, useQueryClient } from "react-query";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
+import Link from "next/link";
 
 const Edit = () => {
 
@@ -64,7 +65,7 @@ const Edit = () => {
         {
             onMutate: async ({ data, urls }) => {
 
-                router.push('http://localhost:3000/')
+                router.push('/')
 
                 await queryClient.cancelQueries('timelines');
                 const previousTimelines = queryClient.getQueryData<TimelineFormInputs[]>(['timelines']);
@@ -162,6 +163,7 @@ const Edit = () => {
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-3xl mb-4">Editar</h1>
+            <Link href='/'>Volver</Link>
             <form onSubmit={handleSubmit} className="bg-white border-2 rounded-md flex flex-col gap-4 p-4">
                 <label htmlFor="mainText" className="text-lg font-semibold">Texto</label>
                 <input type="text" value={mainText} onChange={handleTextChange} className="border p-2 rounded-md" />
