@@ -28,8 +28,10 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                 />
             </Head>
             <div className="bg-white shadow-md rounded-lg p-4">
-                <div className="flex items-center gap-4">
-                    <h2 className={mainText!.length > 300 ? "text-md font-normal" : "text-xl font-semibold"}>{mainText}</h2>
+                <div className="text-left">
+                {mainText && mainText.split('\n').map((paragraph, idx) => (
+                    <p key={idx} className={mainText.length > 300 ? "text-md font-normal mb-2" : "text-xl font-semibold mb-2"}>{paragraph}</p>
+                    ))}
                 </div>
                 <p className="text-sm text-gray-600 mt-2">
                     {tags && tags.length > 0 && tags.join(', ')}
