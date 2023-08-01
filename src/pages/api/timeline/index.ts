@@ -20,6 +20,7 @@ export default async function handler(
     if (tags) {
       const tagsArray = Array.isArray(tags) ? tags : [tags];
       const regexPatterns = tagsArray.map((tag) => new RegExp(`^${tag}`, "i"));
+      
       const response = await TimeLineModel.find({
         tags: { $in: regexPatterns },
       })
@@ -27,6 +28,7 @@ export default async function handler(
         .skip(skip)
         .limit(perPage)
         .lean();
+
       res.status(200).json(response);
     } else {
       const response = await TimeLineModel.find({})
