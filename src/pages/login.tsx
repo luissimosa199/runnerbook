@@ -1,6 +1,7 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getCsrfToken } from "next-auth/react";
 import { signIn } from 'next-auth/react'
+import Link from "next/link";
 
 export default function Login({ csrfToken }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
@@ -35,10 +36,11 @@ export default function Login({ csrfToken }: InferGetServerSidePropsType<typeof 
                     </label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="password" type="password" id="password" />
                 </div>
-                <div className="flex items-center justify-between">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                <div className="flex flex-col items-center justify-between">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all" type="submit">
                         Ingresar
                     </button>
+                    <Link href="/register" className="text-sm mt-2 text-slate-500 hover:opacity-75 transition-all">No tengo cuenta</Link>
                 </div>
             </form>
         </div>

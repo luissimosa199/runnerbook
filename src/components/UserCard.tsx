@@ -37,6 +37,7 @@ const UserCard: FunctionComponent<UserCardProps> = ({ imageSrc, name, descriptio
                     <div className="text-center">
                         <p className="font-bold">{session.user.name}</p>
                         <p className="italic">{session.user.email}</p>
+                        <button type="button" onClick={() => signOut()} className="text-sm">Cerrar Sesión</button>
                     </div>
                 </div>
             </div>
