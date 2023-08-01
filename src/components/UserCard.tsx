@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { FunctionComponent } from "react";
 import { useSession, signIn, signOut } from "next-auth/react"
+import { useRouter } from "next/router";
 
 interface UserCardProps {
     imageSrc: string;
@@ -11,6 +12,7 @@ interface UserCardProps {
 const UserCard: FunctionComponent<UserCardProps> = ({ imageSrc, name, description }) => {
 
     const { data: session, status } = useSession()
+    const router = useRouter()
 
     if (status === "loading") {
         return (
@@ -53,7 +55,7 @@ const UserCard: FunctionComponent<UserCardProps> = ({ imageSrc, name, descriptio
                     className="w-16 h-16 object-cover rounded-full mb-4 md:mb-0"
                 />
                 <div className="text-center">
-                    <button type="button" onClick={() => signIn()} className="font-bold">Iniciar Sesión</button>
+                    <button type="button" onClick={() => router.push('/login')} className="font-bold">Iniciar Sesión</button>
                 </div>
             </div>
         </div>

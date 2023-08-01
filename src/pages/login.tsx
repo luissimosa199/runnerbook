@@ -9,11 +9,13 @@ export default function Login({ csrfToken }: InferGetServerSidePropsType<typeof 
         const formData = new FormData(e.currentTarget);
         const email = formData.get("email");
         const password = formData.get("password");
+        const csrfToken = formData.get("csrfToken");
 
-        signIn('Credenciales', {
+        signIn('credentials', {
             email: email,
             password: password,
-            callbackUrl: '/'
+            csrfToken: csrfToken,
+            callbackUrl: '/',
         })
     };
 
