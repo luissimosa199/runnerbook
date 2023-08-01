@@ -29,8 +29,6 @@ describe("formHelpers", () => {
 
       handleDeleteImage(event as any, currentIdx, setImages);
 
-      // The setImages function should be called with a function that
-      // modifies the images array as expected.
       const modifyImagesFunction = setImages.mock.calls[0][0];
       const newImages = modifyImagesFunction(images);
 

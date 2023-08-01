@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSession, signIn, signOut } from "next-auth/react"
 
-const Prueba = () => {
+const Login = () => {
 
     const { data: session, status } = useSession()
 
@@ -26,4 +26,4 @@ const Prueba = () => {
     )
 }
 
-export default Prueba
+export default Login
