@@ -125,7 +125,7 @@ const Edit = () => {
     };
 
 
-    const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const handleTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setMainText(event.target.value);
     }
 
@@ -166,7 +166,9 @@ const Edit = () => {
             <Link href='/'>Volver</Link>
             <form onSubmit={handleSubmit} className="bg-white border-2 rounded-md flex flex-col gap-4 p-4">
                 <label htmlFor="mainText" className="text-lg font-semibold">Texto</label>
-                <input type="text" value={mainText} onChange={handleTextChange} className="border p-2 rounded-md" />
+
+                <textarea value={mainText} onChange={handleTextChange} className="border rounded h-32 p-3 text-md resize-none" />
+
                 <TagsInput tagsList={tagsList} setTagsList={setTagsList} />
                 <PhotoInput handleUploadImages={handleUploadImages} />
                 <div className="flex flex-col gap-2">
