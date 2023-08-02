@@ -32,7 +32,16 @@ const TimelineForm: FunctionComponent = () => {
       };
       return sendData(payload);
     },
+    // {
+    //   onSuccess: (data) => {
+    //     console.log(data)
+    //     const updatedData = { ...data } // excluyendo la imagen
+    // 
+    //     update data ---> optimisticUpdate({ data: previewData, images: images });
+    //   }
+    // }
   );
+  
 
   const {
     register,

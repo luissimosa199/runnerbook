@@ -1,19 +1,22 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 export default function Register() {
+
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
     const router = useRouter()
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsLoading(true)
         const formData = new FormData(e.currentTarget);
         const email = formData.get('email');
         const password = formData.get('password');
         const name = formData.get('name');
 
-        // Here you can call an API to register the new user
-        // For example:
         const response = await fetch('/api/register', {
             method: 'POST',
             body: JSON.stringify({ email, password, name }),
@@ -22,11 +25,13 @@ export default function Register() {
             },
         });
 
-        // Handle the response as needed
+        const data = await response.json()
+
         if (response.ok) {
             router.push('/login')
         } else {
-            // Handle or notify user of registration error
+            setErrorMessage(data.error)
+            setIsLoading(false)
         }
     };
 
@@ -51,11 +56,14 @@ export default function Register() {
                     </label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="password" type="password" id="password" required />
                 </div>
+                {errorMessage && <div className="mb-6">
+                    <p className="text-sm text-red-600 font-semibold text-center">Error: {errorMessage}</p>
+                </div>}
                 <div className="flex flex-col items-center justify-between">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all" type="submit">
-                        Registrarse
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all" type="submit" disabled={isLoading}>
+                        {isLoading ? "Registrando..." : "Registrarse"}
                     </button>
-                    <Link href="/login" className="text-sm mt-2 text-slate-500 hover:opacity-75 transition-all">No tengo cuenta</Link>
+                    <Link href="/login" className="text-sm mt-2 text-slate-500 hover:opacity-75 transition-all">Ya tengo cuenta</Link>
                 </div>
             </form>
         </div>
