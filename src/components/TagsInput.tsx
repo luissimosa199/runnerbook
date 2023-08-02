@@ -56,6 +56,9 @@ const TagsInput: FunctionComponent<TagsInputProps> = ({ tagsList, setTagsList })
                     onKeyDown={handleKeyPress}
                     placeholder="Agrega una categoría y presiona Enter"
                     className="border rounded px-3 py-2 w-full mb-2"
+                    autoCapitalize="none"
+                    autoCorrect="off"
+                    autoComplete="off"
                 />
                 <button onClick={(event) => {
                     event.preventDefault();
