@@ -23,7 +23,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                     timeline={timeline}
                     timelineName={mainText?.slice(0, 50) || ''}
                     timeLineUrl={timeLineUrl}
-                    message=""
+                    message="Comparte con Doxa-Board"
                     siteName="doxa-board"
                 />
             </Head>
