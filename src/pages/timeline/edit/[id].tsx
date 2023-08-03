@@ -19,6 +19,7 @@ const Edit = () => {
     const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
     const [uploadedImages, setUploadedImages] = useState<string[]>([]);
     const [newImageCaptions, setNewImageCaptions] = useState<string[]>([]);
+    const [author, setAuthor] = useState<{ id: string, name: string }>({ id: '', name: '' });
 
     const queryClient = useQueryClient();
     const router = useRouter()
@@ -31,6 +32,7 @@ const Edit = () => {
             setTagsList(timelineData.tags);
             setMainText(timelineData.mainText);
             setPhoto(timelineData.photo);
+            setAuthor({ id: timelineData.authorId, name: timelineData.authorName })
         }
 
         if (id) {
@@ -109,7 +111,9 @@ const Edit = () => {
             mainText: mainText,
             photo: photo,
             length: photo.length,
-            tags: tagsList
+            tags: tagsList,
+            authorId: author.id,
+            authorName: author.name,
         }
 
         if (imageUploadPromise) {

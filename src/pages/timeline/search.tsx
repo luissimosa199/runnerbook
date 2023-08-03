@@ -28,7 +28,16 @@ const Search: FunctionComponent<SearchProps> = ({ timelineData }) => {
                 {timelineData && timelineData.length > 0 && timelineData.map((e) => {
                     return (
                         <div key={e._id}>
-                            <TimeLine _id={e._id} tags={e.tags} mainText={e.mainText} length={e.length} timeline={e.photo} createdAt={e.createdAt} />
+                            <TimeLine
+                                _id={e._id}
+                                tags={e.tags}
+                                mainText={e.mainText}
+                                length={e.length}
+                                timeline={e.photo}
+                                createdAt={e.createdAt}
+                                authorId={e.authorId}
+                                authorName={e.authorName}
+                            />
                         </div>
                     )
                 })}
@@ -58,7 +67,9 @@ export const getServerSideProps: GetServerSideProps<SearchProps> = async (contex
             length: item.length,
             photo: item.photo,
             createdAt: item.createdAt.toISOString(),
-            tags: item.tags || []
+            tags: item.tags || [],
+            authorId: item.authorId || '',
+            authorName: item.authorName || ''
         }));
 
         return {

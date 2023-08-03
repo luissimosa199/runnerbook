@@ -29,7 +29,16 @@ const TimelinePage: FunctionComponent<TimelinePageProps> = ({ timelineData }) =>
       />
       <div>
         <div key={timelineData._id}>
-          <TimeLine _id={timelineData._id} tags={timelineData.tags} mainText={timelineData.mainText} length={timelineData.length} timeline={timelineData.photo} createdAt={timelineData.createdAt} />
+          <TimeLine
+            _id={timelineData._id}
+            tags={timelineData.tags}
+            mainText={timelineData.mainText}
+            length={timelineData.length}
+            timeline={timelineData.photo}
+            createdAt={timelineData.createdAt}
+            authorId={timelineData.authorId}
+            authorName={timelineData.authorName}
+          />
         </div>
       </div>
     </>
@@ -58,7 +67,9 @@ export const getServerSideProps: GetServerSideProps<TimelinePageProps> = async (
       length: timeline.length,
       photo: timeline.photo,
       createdAt: timeline.createdAt.toISOString(),
-      tags: timeline.tags
+      tags: timeline.tags,
+      authorId: timeline.authorId || '',
+      authorName: timeline.authorName || ''
     };
 
     return {
