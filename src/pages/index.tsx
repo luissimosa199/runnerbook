@@ -12,7 +12,6 @@ import { useInfiniteQuery } from 'react-query';
 import { getTimelines } from '@/utils/getTimelines'
 import CategoriesList from '@/components/CategoriesList'
 
-
 interface MainboardProps {
   timelineData: TimelineFormInputs[];
 }

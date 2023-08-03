@@ -51,6 +51,7 @@ export const uploadImages = async (
 export const handleFileChange = (
   event: ChangeEvent<HTMLInputElement>,
   setImages: Dispatch<SetStateAction<string[]>>,
+  setPreviews: Dispatch<SetStateAction<string[]>>,
 ) => {
   return new Promise<void>((resolve, reject) => {
     const files = event.target.files;
@@ -70,6 +71,7 @@ export const handleFileChange = (
 
           if (processedFiles === files.length) {
             setImages(newPreviews);
+            setPreviews(newPreviews);
             resolve();
           }
         };
@@ -151,10 +153,12 @@ export const handleCaptionChange = (
 export const handleDeleteImage = (
   event: React.MouseEvent<HTMLButtonElement>,
   currentIdx: number,
-  setImages: Dispatch<SetStateAction<string[]>>
+  setImages: Dispatch<SetStateAction<string[]>>,
+  setPreviews: Dispatch<SetStateAction<string[]>>
 ) => {
   event.preventDefault();
   setImages((prevImages) => prevImages.filter((e, idx) => idx !== currentIdx));
+  setPreviews((prevImages) => prevImages.filter((e, idx) => idx !== currentIdx))
 };
 
 export const sendData = async (

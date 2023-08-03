@@ -1,7 +1,6 @@
 import { FunctionComponent } from "react";
 import TimeLineEntry from "./TimeLineEntry";
 import { TimeLineEntryData, TimeLineProps } from "@/types";
-import { useRouter } from "next/router";
 import Head from "next/head";
 import ShareButtons from "./ShareButtons";
 import HeadMetaTags from "./HeadMetaTags";
@@ -13,7 +12,6 @@ import Link from "next/link";
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName }) => {
 
     const baseUrl = "https://doxa-board-dev.vercel.app"
-    const router = useRouter()
     const timeLineUrl = baseUrl + `/timeline/${_id}`
 
     return (

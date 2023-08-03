@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest && npm run build"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^1.0.0",

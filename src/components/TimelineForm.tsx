@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react"
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
   const [imagesCaption, setImagesCaptions] = useState<{ idx: number; value: string }[]>([]);
   const [tagsList, setTagsList] = useState<string[]>([]);
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false)
@@ -36,14 +37,44 @@ const TimelineForm: FunctionComponent = () => {
 
       return sendData(payload);
     },
-    // {
-    //   onSuccess: (data) => {
-    //     console.log(data)
-    //     const updatedData = { ...data } // excluyendo la imagen
-    // 
-    //     update data ---> optimisticUpdate({ data: previewData, images: images });
-    //   }
-    // }
+    {
+      onSuccess: async (data) => {
+
+        const currentData = queryClient.getQueryData<{
+          pages: TimelineFormInputs[][];
+          pageParams: any[];
+        }>("timelines") || { pages: [], pageParams: [] };
+
+        const response = await data.json()
+
+        const newPayload = {
+          ...response,
+          photo: previews.map((image, photoIdx: number) => {
+            const caption = imagesCaption.find((e) => e.idx === photoIdx)?.value;
+            return {
+              url: image,
+              idx: photoIdx,
+              caption: caption,
+            };
+          }),
+        };
+
+        queryClient.setQueryData<{
+          pages: TimelineFormInputs[][];
+          pageParams: any[];
+        }>("timelines", {
+          ...currentData,
+          pages: [
+            [newPayload, ...currentData.pages[0].slice(1)],
+            ...currentData.pages.slice(1),
+          ],
+          pageParams: currentData.pageParams // Explicitly passing pageParams, ensuring it's not undefined
+        });
+
+        setPreviews([])
+      }
+
+    }
   );
 
 
@@ -71,7 +102,7 @@ const TimelineForm: FunctionComponent = () => {
     if (imageUploadPromise) {
       const urls = await imageUploadPromise;
       const currentPhotos = createPhotoData(urls, imagesCaption)
-      const processedData = createDataObject(data, currentPhotos, tagsList, session )
+      const processedData = createDataObject(data, currentPhotos, tagsList, session)
       setImageUploadPromise(null);
 
       try {
@@ -103,7 +134,7 @@ const TimelineForm: FunctionComponent = () => {
 
   const handleUploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
     setSubmitBtnDisabled(true);
-    (await handleFileChange(event, setImages));
+    (await handleFileChange(event, setImages, setPreviews));
     setSubmitBtnDisabled(false);
     const uploadPromise = uploadImages(event);
     setImageUploadPromise(uploadPromise);
@@ -129,7 +160,7 @@ const TimelineForm: FunctionComponent = () => {
         <div className="flex flex-col gap-2">
           {images.map((e, idx) => (
             <div key={idx}>
-              <button className="text-xs text-red-500 mb-1" onClick={(event) => handleDeleteImage(event, idx, setImages)}>
+              <button className="text-xs text-red-500 mb-1" onClick={(event) => handleDeleteImage(event, idx, setImages, setPreviews)}>
                 Borrar
               </button>
               <Image src={e} alt={`Thumbnail ${idx}`} className="mt-2 rounded shadow-md" width={834} height={834} />

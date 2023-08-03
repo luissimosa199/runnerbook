@@ -24,10 +24,11 @@ describe("formHelpers", () => {
     it("deberia eliminar la imagen de un index especifico", () => {
       const images = ["image1", "image2", "image3"];
       const setImages = jest.fn();
+      const setPreviews = jest.fn();
       const currentIdx = 1;
       const event = { preventDefault: jest.fn() };
 
-      handleDeleteImage(event as any, currentIdx, setImages);
+      handleDeleteImage(event as any, currentIdx, setImages, setPreviews);
 
       const modifyImagesFunction = setImages.mock.calls[0][0];
       const newImages = modifyImagesFunction(images);
