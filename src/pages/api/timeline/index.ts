@@ -39,13 +39,15 @@ export default async function handler(
       res.status(200).json(response);
     }
   } else if (req.method === "POST") {
-    const { mainText, photo, length, tags } = JSON.parse(req.body) as TimelineFormInputs;
+    const { mainText, photo, length, tags, authorId, authorName } = JSON.parse(req.body) as TimelineFormInputs;
 
     const timeline = new TimeLineModel({
       mainText: mainText || "",
       photo: photo,
       length: length,
       tags: tags,
+      authorId: authorId,
+      authorName: authorName
     });
 
     await timeline.save();

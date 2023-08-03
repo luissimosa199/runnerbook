@@ -4,6 +4,7 @@ import React from 'react'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import '@testing-library/jest-dom'
 import fetchMock from 'jest-fetch-mock';
+import { SessionProvider } from 'next-auth/react';
 
 global.fetch = fetchMock as any;
 
@@ -13,11 +14,14 @@ describe('TimelineForm', () => {
 
     it('does not submit when form is empty', async () => {
         fetchMock.mockResponseOnce(JSON.stringify({ /* your expected response here */ }));
+        const session = { user: { name: 'user1', email: 'user1@domain.com' }, expires: '2023-09-02T14:57:44.893Z' }
 
         await act(async () => {
             render(
                 <QueryClientProvider client={queryClient}>
-                    <TimelineForm />
+                    <SessionProvider session={session}>
+                        <TimelineForm />
+                    </SessionProvider>
                 </QueryClientProvider>
             );
         });

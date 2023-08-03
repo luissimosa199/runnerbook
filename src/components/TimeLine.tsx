@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
 
-const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id }) => {
+const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName }) => {
 
     const baseUrl = "https://doxa-board-dev.vercel.app"
     const router = useRouter()
@@ -37,6 +37,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                     {tags && tags.length > 0 && tags.join(', ')}
                 </p>
                 <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
+                <p className="text-sm text-gray-500">{authorName}</p>
                 <div className="mt-4 flex justify-between items-center">
                     <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />
                     {_id !== "newitem" && <Link

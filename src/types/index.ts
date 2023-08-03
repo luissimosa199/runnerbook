@@ -17,6 +17,8 @@ export interface TimeLineProps {
   mainText?: string;
   createdAt: string;
   tags: string[]
+  authorId: string;
+  authorName: string;
 }
 
 // 
@@ -27,5 +29,7 @@ export interface TimelineFormInputs {
   photo?: TimeLineEntryData[];
   length: number;
   createdAt: string;
-  tags: string[]
+  tags: string[];
+  authorId: string;
+  authorName: string;
 };

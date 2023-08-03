@@ -108,6 +108,8 @@ const Mainboard: FunctionComponent = () => {
                 length={e.length}
                 timeline={e.photo}
                 createdAt={e.createdAt}
+                authorId={e.authorId}
+                authorName={e.authorName}
               />
             </div>
           ))
@@ -125,6 +127,8 @@ const Mainboard: FunctionComponent = () => {
                     length={e.length}
                     timeline={e.photo}
                     createdAt={e.createdAt}
+                    authorId={e.authorId}
+                    authorName={e.authorName}
                   />
                 </div>
               ))
@@ -163,7 +167,9 @@ export const getServerSideProps: GetServerSideProps<MainboardProps> = async () =
       length: item.length,
       photo: item.photo,
       createdAt: item.createdAt.toISOString(),
-      tags: item.tags || []
+      tags: item.tags || [],
+      authorId: item.authorId || '', 
+      authorName: item.authorName || ''
     }));
 
     return {

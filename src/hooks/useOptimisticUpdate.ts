@@ -1,6 +1,7 @@
 import { useQueryClient } from "react-query";
 import { TimeLineEntryData, TimelineFormInputs } from "@/types";
 import { getCurrentDateTimeString } from "@/utils/formHelpers";
+import { Session } from "next-auth";
 
 interface OptimisticUpdateParams {
   data: Omit<TimelineFormInputs, "_id" | "createdAt">;
@@ -12,7 +13,11 @@ interface Caption {
   value: string;
 }
 
-const useOptimisticUpdate = (imagesCaption: Caption[], tagsList: string[]) => {
+const useOptimisticUpdate = (
+  imagesCaption: Caption[],
+  tagsList: string[],
+  session: Session | null
+) => {
   const queryClient = useQueryClient();
 
   return ({ data, images }: OptimisticUpdateParams) => {
@@ -41,6 +46,8 @@ const useOptimisticUpdate = (imagesCaption: Caption[], tagsList: string[]) => {
       photo: currentPhotos,
       length: currentPhotos.length,
       tags: tagsList,
+      authorId: session?.user?.email ?? "defaultId",
+      authorName: session?.user?.name ?? "defaultName",
     };
 
     if (currentData) {

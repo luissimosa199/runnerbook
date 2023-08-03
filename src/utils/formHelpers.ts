@@ -2,6 +2,7 @@ import { TimelineFormInputs } from "@/types";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import Swal from "sweetalert2";
 import { convertToJpeg } from "./convertToJpeg";
+import { Session } from "next-auth";
 
 export const uploadImages = async (
   event: ChangeEvent<HTMLInputElement>,
@@ -237,11 +238,13 @@ export const createPhotoData = (paths: string[], imagesCaption: { idx: number; v
   });
 }
 
-export const createDataObject = (data: { mainText?: string } , photos: any[], tagsList: string[]) => {
+export const createDataObject = (data: { mainText?: string } , photos: any[], tagsList: string[], session: Session | null) => {
   return {
     mainText: data.mainText || "",
     photo: photos,
     length: photos.length,
-    tags: tagsList
+    tags: tagsList,
+    authorId: session?.user?.email ?? 'defaultId',
+    authorName: session?.user?.name ?? 'defaultName',    
   };
 }

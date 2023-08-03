@@ -50,6 +50,8 @@ describe("formHelpers", () => {
         photo: [],
         length: 0,
         tags: ["tag1", "tag2"],
+        authorId: 'user1@domain.com',
+        authorName: 'user1'
       };
 
       fetchMock.mockResponseOnce(JSON.stringify({ message: "Success" }));
@@ -75,6 +77,8 @@ describe("formHelpers", () => {
         photo: [{ url: "https://image.img", idx: 0, caption: "prueba" }],
         length: 1,
         tags: ["tag1", "tag2"],
+        authorId: 'user1@domain.com',
+        authorName: 'user1'
       };
 
       fetchMock.mockResponseOnce(JSON.stringify({ message: "Success" }));
@@ -160,14 +164,17 @@ describe("formHelpers", () => {
       const data = { mainText: "Test text" };
       const photos = [{ url: "test_url", idx: 0, caption: "Test caption" }];
       const tagsList = ["tag1", "tag2"];
+      const session = { user: { name: 'user1', email: 'user1@domain.com' }, expires: '2023-09-02T14:57:44.893Z' }
 
-      const result = createDataObject(data, photos, tagsList);
+      const result = createDataObject(data, photos, tagsList, session);
 
       expect(result).toEqual({
         mainText: "Test text",
         photo: [{ url: "test_url", idx: 0, caption: "Test caption" }],
         length: 1,
         tags: ["tag1", "tag2"],
+        authorId: 'user1@domain.com',
+        authorName: 'user1'
       });
     });
 
@@ -175,13 +182,16 @@ describe("formHelpers", () => {
       const data = {};
       const photos = [{ url: "test_url", idx: 0, caption: "Test caption" }];
       const tagsList = ["tag1", "tag2"];
+      const session = { user: { name: 'user1', email: 'user1@domain.com' }, expires: '2023-09-02T14:57:44.893Z' }
 
-      const result = createDataObject(data, photos, tagsList);
+      const result = createDataObject(data, photos, tagsList, session);
       expect(result).toEqual({
         mainText: "",
         photo: [{ url: "test_url", idx: 0, caption: "Test caption" }],
         length: 1,
         tags: ["tag1", "tag2"],
+        authorId: 'user1@domain.com',
+        authorName: 'user1'
       });
     });
   });

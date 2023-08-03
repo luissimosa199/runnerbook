@@ -7,15 +7,18 @@ import TagsInput from "./TagsInput";
 import { useMutation, useQueryClient } from 'react-query';
 import useOptimisticUpdate from "@/hooks/useOptimisticUpdate";
 import PhotoInput from "./PhotoInput";
+import { useSession } from "next-auth/react"
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
   const [imagesCaption, setImagesCaptions] = useState<{ idx: number; value: string }[]>([]);
   const [tagsList, setTagsList] = useState<string[]>([]);
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false)
-  const optimisticUpdate = useOptimisticUpdate(imagesCaption, tagsList);
   const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
   const queryClient = useQueryClient();
+
+  const { data: session } = useSession();
+  const optimisticUpdate = useOptimisticUpdate(imagesCaption, tagsList, session);
 
   const mutation = useMutation(
     async ({ data, urls }: { data: Omit<TimelineFormInputs, "_id" | "createdAt">; urls: string[] }) => {
@@ -30,6 +33,7 @@ const TimelineForm: FunctionComponent = () => {
           };
         }),
       };
+
       return sendData(payload);
     },
     // {
@@ -41,7 +45,7 @@ const TimelineForm: FunctionComponent = () => {
     //   }
     // }
   );
-  
+
 
   const {
     register,
@@ -57,7 +61,7 @@ const TimelineForm: FunctionComponent = () => {
 
     setSubmitBtnDisabled(true)
     const previewPhotos = createPhotoData(images, imagesCaption)
-    const previewData = createDataObject(data, previewPhotos, tagsList)
+    const previewData = createDataObject(data, previewPhotos, tagsList, session)
     const { previousData } = optimisticUpdate({ data: previewData, images: images });
 
     setTagsList([])
@@ -67,7 +71,7 @@ const TimelineForm: FunctionComponent = () => {
     if (imageUploadPromise) {
       const urls = await imageUploadPromise;
       const currentPhotos = createPhotoData(urls, imagesCaption)
-      const processedData = createDataObject(data, currentPhotos, tagsList)
+      const processedData = createDataObject(data, currentPhotos, tagsList, session )
       setImageUploadPromise(null);
 
       try {

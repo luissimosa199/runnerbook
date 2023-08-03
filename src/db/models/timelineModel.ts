@@ -36,4 +36,10 @@ export class Timeline {
 
   @prop({ default: () => [] })
   tags: string[];
+
+  @prop()
+  authorName: string;
+
+  @prop()
+  authorId: string;
 }

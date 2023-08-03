@@ -13,8 +13,9 @@ const HeadMetaTags: FunctionComponent<HeadMetaTagsProps> = ({ timeline, timeline
 
     return (
         <>
-            {timeline && timeline?.length > 0 && <meta property="og:image" content={timeline[0].url} />}
+            {timeline && timeline?.length > 0 && <meta property="og:image" itemProp="image" content={timeline[0].url} />}
             {timeline && timeline?.length > 0 && <meta name="twitter:image" content={timeline[0].url} />}
+
             <meta property="og:url" content={`${timeLineUrl}`} />
             <meta property="og:title" content={`${message} ${timelineName}`} />
             <meta name="twitter:title" content={`${message} ${timelineName}`} />
