@@ -23,7 +23,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                     timeline={timeline}
                     timelineName={mainText?.slice(0, 50) || ''}
                     timeLineUrl={timeLineUrl}
-                    message="Mira mi TimeLine"
+                    message=""
                     siteName="doxa-board"
                 />
             </Head>
@@ -38,7 +38,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                 </p>
                 <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
                 <div className="mt-4 flex justify-between items-center">
-                    <ShareButtons url={timeLineUrl} title={`Te comparto este timeline: ${mainText?.slice(0, 50)}`} />
+                    <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />
                     {_id !== "newitem" && <Link
                         className="text-blue-500 hover:text-blue-700 transition ease-in-out duration-150"
                         href={`/timeline/edit/${_id}`}

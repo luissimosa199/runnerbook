@@ -31,13 +31,8 @@ export const authOptions: NextAuthOptions = {
     }),
 
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. "Sign in with...")
       name: "credentials",
       id: "credentials",
-      // `credentials` is used to generate a form on the sign in page.
-      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-      // e.g. domain, username, password, 2FA token, etc.
-      // You can pass any HTML attribute to the <input> tag through the object.
 
       credentials: {
         email: {
@@ -57,25 +52,20 @@ export const authOptions: NextAuthOptions = {
           const user = await UserModel.findOne({ email: credentials.email });
 
           if (!user) {
-            // No user found with that email address
             return null;
           }
 
           const isValid = await user.validatePassword(credentials.password);
 
           if (!isValid) {
-            // Password is incorrect
             return null;
           }
-
-          // Return user object that will be saved in the token
           return {
             id: user._id,
             name: user.name,
             email: user.email,
           };
         } catch (error) {
-          // Handle any other database or comparison errors
           console.error(error);
           return null;
         }
@@ -92,25 +82,6 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
-
-  // callbacks: {
-  //   async session(session: CustomSession, user: any) {
-  //     session.user.id = user.id
-  //     return session
-  //   },
-  // },
-  // 
-  // pages: {
-  //   signIn: "/auth/signin",
-  //   signOut: "/auth/signout",
-  //   error: "/auth/error", // Error code callbacks will redirect here
-  // },
-  // 
-  // database: process.env.DATABASE_URL,
-  // secret: process.env.SECRET,
-  // sessionMaxAge: 30 * 24 * 60 * 60, // 30 days
-  // sessionUpdateAge: 24 * 60 * 60, // 24 hours
-  // ...
 };
 
 const NextAuthHandler = (

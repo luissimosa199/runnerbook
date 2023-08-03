@@ -15,7 +15,7 @@ const ShareButtons: FunctionComponent<ShareButtonsProps> = ({ url, title }) => {
     const encodedTitle = encodeURIComponent(title);
 
     const shareLinks = [
-        { platform: 'WhatsApp', url: `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`, icon: faWhatsapp, color: '#25D366' },
+        { platform: 'WhatsApp', url: `https://wa.me/?text=${encodedUrl}%20${encodedTitle}`, icon: faWhatsapp, color: '#25D366' },
         { platform: 'Facebook', url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, icon: faFacebook, color: '#3b5998' },
         { platform: 'Twitter', url: `https://twitter.com/share?url=${encodedUrl}&text=${encodedTitle}`, icon: faTwitter, color: '#1DA1F2' },
         { platform: 'LinkedIn', url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`, icon: faLinkedin, color: '#0077b5' },

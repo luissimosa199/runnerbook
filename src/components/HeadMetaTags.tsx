@@ -11,19 +11,17 @@ interface HeadMetaTagsProps {
 
 const HeadMetaTags: FunctionComponent<HeadMetaTagsProps> = ({ timeline, timelineName, timeLineUrl, message, siteName }) => {
 
-    if (timeline && timeline?.length > 0) console.log(timeline[0])
-
     return (
         <>
+            {timeline && timeline?.length > 0 && <meta property="og:image" content={timeline[0].url} />}
+            {timeline && timeline?.length > 0 && <meta name="twitter:image" content={timeline[0].url} />}
+            <meta property="og:url" content={`${timeLineUrl}`} />
             <meta property="og:title" content={`${message} ${timelineName}`} />
             <meta name="twitter:title" content={`${message} ${timelineName}`} />
             <meta property="og:description" content={`${message} ${timelineName}`} />
             <meta name="twitter:description" content={`${message} ${timelineName}`} />
             <meta property="og:type" content="website" />
             <meta property="og:image:type" content="image/jpeg" />
-            {timeline && timeline?.length > 0 && <meta property="og:image" content={timeline[0].url} />}
-            {timeline && timeline?.length > 0 && <meta name="twitter:image" content={timeline[0].url} />}
-            <meta property="og:url" content={`${timeLineUrl}`} />
             <meta property="og:site_name" content={siteName} />
         </>
     )
