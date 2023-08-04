@@ -6,10 +6,63 @@ import ShareButtons from "./ShareButtons";
 import HeadMetaTags from "./HeadMetaTags";
 import formatDateString from "@/utils/formatDateString";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import Swal from 'sweetalert2';
+import { useQueryClient } from "react-query";
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName }) => {
+
+    const { data: session } = useSession()
+    const queryClient = useQueryClient();
+
+    const handleDeleteTimeline = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+
+        try {
+            const willDelete = await Swal.fire({
+                title: "Estas seguro?",
+                text: "Esta publicación no podrá ser recuperada una vez confirmes",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Borrar",
+                cancelButtonText: "Volver",
+                reverseButtons: true
+            });
+
+            if (willDelete.isConfirmed) {
+                const response = await fetch(`/api/timeline/${_id}`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    queryClient.invalidateQueries('timelines');
+
+                    Swal.fire({
+                        title: "Publicación borrada",
+                        icon: "success",
+                    });
+                } else {
+                    Swal.fire({
+                        title: `Error: ${response.status} ${response.statusText}`,
+                        icon: "error",
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Error: ", error);
+
+            Swal.fire({
+                title: `Error: ${JSON.stringify(error)}`,
+                icon: "error",
+            });
+        }
+    }
+
+
 
     const baseUrl = "https://doxa-board-dev.vercel.app"
     const timeLineUrl = baseUrl + `/timeline/${_id}`
@@ -27,8 +80,8 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
             </Head>
             <div className="bg-white shadow-md rounded-lg p-4">
                 <div className="text-left">
-                {mainText && mainText.split('\n').map((paragraph, idx) => (
-                    <p key={idx} className={mainText.length > 300 ? "text-md font-normal mb-2" : "text-xl font-semibold mb-2"}>{paragraph}</p>
+                    {mainText && mainText.split('\n').map((paragraph, idx) => (
+                        <p key={idx} className={mainText.length > 300 ? "text-md font-normal mb-2" : "text-xl font-semibold mb-2"}>{paragraph}</p>
                     ))}
                 </div>
                 <p className="text-sm text-gray-600 mt-2">
@@ -37,13 +90,23 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                 <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
                 <p className="text-sm text-gray-500">{authorName}</p>
                 <div className="mt-4 flex justify-between items-center">
-                    <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />
-                    {_id !== "newitem" && <Link
-                        className="text-blue-500 hover:text-blue-700 transition ease-in-out duration-150"
-                        href={`/timeline/edit/${_id}`}
-                    >
-                        <FontAwesomeIcon icon={faPenToSquare} size="lg" />
-                    </Link>}
+                    <div>
+                        {_id !== "newitem" && <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />}
+                    </div>
+                    <div>
+
+                        {_id !== "newitem" && <Link
+                            className="text-blue-500 hover:text-blue-700 transition ease-in-out duration-150"
+                            href={`/timeline/edit/${_id}`}
+                        >
+                            <FontAwesomeIcon icon={faPenToSquare} size="lg" />
+                        </Link>}
+
+                        {_id !== "newitem" && session?.user?.email === authorId && <button onClick={handleDeleteTimeline}>
+                            <FontAwesomeIcon icon={faTrashCan} size="lg" className="text-red-500 hover:text-red-700 transition ease-in-out duration-150 ml-2" />
+                        </button>}
+
+                    </div>
                 </div>
                 <div className="mt-6">
                     {timeline && timeline.map((e: TimeLineEntryData,) =>

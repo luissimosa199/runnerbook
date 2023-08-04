@@ -8,6 +8,7 @@ export default async function handler(
 ) {
   await dbConnect();
   const id = req.query.id as string;
+
   if (req.method === "GET") {
     const timeline = await TimeLineModel.findById(id);
     if (timeline) {
@@ -35,6 +36,19 @@ export default async function handler(
       }
     } else {
       res.status(404).send({ message: "Timeline not found" });
+    }
+  } else if (req.method === "DELETE") {
+    try {
+      const deletedTimeline = await TimeLineModel.findByIdAndRemove(id);
+
+      if (deletedTimeline) {
+        res.status(200).json({ message: "Timeline successfully deleted" });
+      } else {
+        res.status(404).send({ message: "Timeline not found" });
+      }
+    } catch (err) {
+      console.error("Delete Error:", err);
+      res.status(500).json({ error: "Delete Error" });
     }
   }
 }

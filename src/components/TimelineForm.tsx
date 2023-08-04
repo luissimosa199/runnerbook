@@ -68,7 +68,7 @@ const TimelineForm: FunctionComponent = () => {
             [newPayload, ...currentData.pages[0].slice(1)],
             ...currentData.pages.slice(1),
           ],
-          pageParams: currentData.pageParams // Explicitly passing pageParams, ensuring it's not undefined
+          pageParams: currentData.pageParams
         });
 
         setPreviews([])
