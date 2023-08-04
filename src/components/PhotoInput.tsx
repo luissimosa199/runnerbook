@@ -13,6 +13,7 @@ const PhotoInput: FunctionComponent<PhotoInput> = ({ handleUploadImages, registe
         <label htmlFor="photo" className="relative flex flex-col">
             {label}
             <input
+                accept="image/png, image/jpeg"
                 className="border rounded h-10 p-1"
                 type="file"
                 id="photo"
