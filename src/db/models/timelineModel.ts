@@ -18,6 +18,7 @@ export class Photo {
   },
   options: { allowMixed: 0 },
 })
+
 export class Timeline {
   @prop({ default: () => nanoid(9) })
   _id: string;
@@ -36,6 +37,9 @@ export class Timeline {
 
   @prop({ default: () => [] })
   tags: string[];
+
+  @prop({ default: () => [] })
+  links: string[];
 
   @prop()
   authorName: string;

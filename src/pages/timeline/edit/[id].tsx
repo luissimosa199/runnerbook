@@ -13,6 +13,7 @@ import Link from "next/link";
 const Edit = () => {
 
     const [tagsList, setTagsList] = useState<string[]>([]);
+    const [linksList, setLinksList] = useState<string[]>([]);
     const [mainText, setMainText] = useState<string>('');
     const [photo, setPhoto] = useState<TimeLineEntryData[]>([]);
     const [newImages, setNewImages] = useState<string[]>([])
@@ -33,6 +34,7 @@ const Edit = () => {
             setMainText(timelineData.mainText);
             setPhoto(timelineData.photo);
             setAuthor({ id: timelineData.authorId, name: timelineData.authorName })
+            setLinksList(timelineData.links)
         }
 
         if (id) {
@@ -114,6 +116,7 @@ const Edit = () => {
             tags: tagsList,
             authorId: author.id,
             authorName: author.name,
+            links: linksList,
         }
 
         if (imageUploadPromise) {

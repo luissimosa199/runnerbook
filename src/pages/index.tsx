@@ -109,6 +109,7 @@ const Mainboard: FunctionComponent = () => {
                 createdAt={e.createdAt}
                 authorId={e.authorId}
                 authorName={e.authorName}
+                links={e.links}
               />
             </div>
           ))
@@ -128,6 +129,7 @@ const Mainboard: FunctionComponent = () => {
                     createdAt={e.createdAt}
                     authorId={e.authorId}
                     authorName={e.authorName}
+                    links={e.links}
                   />
                 </div>
               ))
@@ -168,7 +170,8 @@ export const getServerSideProps: GetServerSideProps<MainboardProps> = async () =
       createdAt: item.createdAt.toISOString(),
       tags: item.tags || [],
       authorId: item.authorId || '', 
-      authorName: item.authorName || ''
+      authorName: item.authorName || '',
+      links: item.links || []
     }));
 
     return {

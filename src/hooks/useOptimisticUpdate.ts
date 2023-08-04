@@ -48,6 +48,7 @@ const useOptimisticUpdate = (
       tags: tagsList,
       authorId: session?.user?.email ?? "defaultId",
       authorName: session?.user?.name ?? "defaultName",
+      links: data.links,
     };
 
     if (currentData) {

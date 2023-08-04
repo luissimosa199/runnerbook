@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 import Swal from 'sweetalert2';
 import { useQueryClient } from "react-query";
 
-const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName }) => {
+const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links }) => {
 
     const { data: session } = useSession()
     const queryClient = useQueryClient();
@@ -122,7 +122,5 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
         </div>
     )
 }
-
-
 
 export default TimeLine;

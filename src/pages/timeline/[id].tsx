@@ -38,6 +38,7 @@ const TimelinePage: FunctionComponent<TimelinePageProps> = ({ timelineData }) =>
             createdAt={timelineData.createdAt}
             authorId={timelineData.authorId}
             authorName={timelineData.authorName}
+            links={timelineData.links}
           />
         </div>
       </div>
@@ -69,7 +70,8 @@ export const getServerSideProps: GetServerSideProps<TimelinePageProps> = async (
       createdAt: timeline.createdAt.toISOString(),
       tags: timeline.tags,
       authorId: timeline.authorId || '',
-      authorName: timeline.authorName || ''
+      authorName: timeline.authorName || '',
+      links: timeline.links || [],
     };
 
     return {

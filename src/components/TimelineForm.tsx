@@ -1,13 +1,14 @@
 import Image from "next/image";
-import { ChangeEvent, FunctionComponent, useState } from "react";
+import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TimelineFormInputs } from "@/types";
 import { createDataObject, createPhotoData, handleCaptionChange, handleDeleteImage, handleFileChange, sendData, uploadImages } from "../utils/formHelpers";
-import TagsInput from "./TagsInput";
 import { useMutation, useQueryClient } from 'react-query';
 import useOptimisticUpdate from "@/hooks/useOptimisticUpdate";
 import PhotoInput from "./PhotoInput";
 import { useSession } from "next-auth/react"
+import InputList from "./LinksInput";
+import TagsInput from "./TagsInput";
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -16,6 +17,9 @@ const TimelineForm: FunctionComponent = () => {
   const [tagsList, setTagsList] = useState<string[]>([]);
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false)
   const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
+  const [linksList, setLinksList] = useState<string[]>([])
+
+
   const queryClient = useQueryClient();
 
   const { data: session } = useSession();
@@ -34,7 +38,6 @@ const TimelineForm: FunctionComponent = () => {
           };
         }),
       };
-
       return sendData(payload);
     },
     {
@@ -86,23 +89,24 @@ const TimelineForm: FunctionComponent = () => {
 
   const onSubmit = async (data: TimelineFormInputs) => {
 
-    if (data.mainText === '' && data.photo?.length === 0) {
+    if (data.mainText === '' && data.photo?.length === 0 && linksList.length === 0) {
       return
     }
 
     setSubmitBtnDisabled(true)
     const previewPhotos = createPhotoData(images, imagesCaption)
-    const previewData = createDataObject(data, previewPhotos, tagsList, session)
+    const previewData = createDataObject(data, previewPhotos, tagsList, session, linksList)
     const { previousData } = optimisticUpdate({ data: previewData, images: images });
 
     setTagsList([])
+    setLinksList([])
     setImages([]);
     reset();
 
     if (imageUploadPromise) {
       const urls = await imageUploadPromise;
       const currentPhotos = createPhotoData(urls, imagesCaption)
-      const processedData = createDataObject(data, currentPhotos, tagsList, session)
+      const processedData = createDataObject(data, currentPhotos, tagsList, session, linksList)
       setImageUploadPromise(null);
 
       try {
@@ -150,11 +154,12 @@ const TimelineForm: FunctionComponent = () => {
         </label>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-2">
         <PhotoInput handleUploadImages={handleUploadImages} register={register} />
       </div>
-
-      <TagsInput tagsList={tagsList} setTagsList={setTagsList} />
+      <InputList inputList={linksList} setInputList={setLinksList} placeholder="Agrega un link y presiona Enter" type="link" />
+      <InputList inputList={tagsList} setInputList={setTagsList} placeholder="Agrega una categoría y presiona Enter" type="tag" />
+      {/* <TagsInput tagsList={tagsList} setTagsList={setTagsList} /> */}
 
       {images.length > 0 && (
         <div className="flex flex-col gap-2">
