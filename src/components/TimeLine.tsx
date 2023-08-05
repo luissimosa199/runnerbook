@@ -122,7 +122,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                     {links && links.map((e: string) =>
                         <div key={e} className="mt-4 border-2 w-fit p-2 mx-auto bg-white">
                             <div className="w-full">
-                                <IFrame src={e} w="800px" h="500px" />
+                                <IFrame src={e} w="800px" h="500px" />https://www.infobae.com/america/medio-ambiente/2023/08/05/dia-del-huemul-un-esperanzador-proyecto-en-la-patagonia-busca-frenar-su-extincion/
                             </div>
                             <p className="text-base text-gray-500 mt-2">Link</p>
                         </div>

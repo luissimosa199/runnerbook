@@ -1,3 +1,4 @@
+import React from "react";
 import { IframeHTMLAttributes } from "react";
 
 interface IFrameProps extends IframeHTMLAttributes<HTMLIFrameElement> {
