@@ -1,4 +1,4 @@
-import { TimeLineModel } from "../../../db/models";
+import { DeletedTimelineModel, TimeLineModel } from "../../../db/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../db/dbConnect";
 
@@ -39,9 +39,19 @@ export default async function handler(
     }
   } else if (req.method === "DELETE") {
     try {
-      const deletedTimeline = await TimeLineModel.findByIdAndRemove(id);
+      const timeline = await TimeLineModel.findById(id);
 
-      if (deletedTimeline) {
+      if (timeline) {
+        const timelineObject = timeline.toObject();
+        const deletedTimeline = new DeletedTimelineModel({
+          ...timelineObject,
+          deletedAt: new Date(),
+        });
+
+        await deletedTimeline.save();
+
+        await TimeLineModel.findByIdAndRemove(id);
+
         res.status(200).json({ message: "Timeline successfully deleted" });
       } else {
         res.status(404).send({ message: "Timeline not found" });
