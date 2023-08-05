@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import Swal from 'sweetalert2';
 import { useQueryClient } from "react-query";
+import IFrame from "./Iframe";
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links }) => {
 
@@ -117,6 +118,17 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                             data={e}
                         />)
                     }
+
+                    {links && links.map((e: string) =>
+                        <div key={e} className="mt-4 border-2 w-fit p-2 mx-auto bg-white">
+                            <div className="w-full">
+                                <IFrame src={e} w="800px" h="500px" />
+                            </div>
+                            <p className="text-base text-gray-500 mt-2">Link</p>
+                        </div>
+                    )}
+
+
                 </div>
             </div>
         </div>
