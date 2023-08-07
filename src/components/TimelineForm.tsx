@@ -8,6 +8,9 @@ import useOptimisticUpdate from "@/hooks/useOptimisticUpdate";
 import PhotoInput from "./PhotoInput";
 import { useSession } from "next-auth/react"
 import InputList from "./LinksInput";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLink } from "@fortawesome/free-solid-svg-icons";
+import ShowUrlsInput from "./ShowUrlsInput";
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -15,8 +18,10 @@ const TimelineForm: FunctionComponent = () => {
   const [imagesCaption, setImagesCaptions] = useState<{ idx: number; value: string }[]>([]);
   const [tagsList, setTagsList] = useState<string[]>([]);
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false)
+  const [showUrlInput, setShowUrlInput] = useState<boolean>(false)
   const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
   const [linksList, setLinksList] = useState<string[]>([])
+
 
 
   const queryClient = useQueryClient();
@@ -155,8 +160,13 @@ const TimelineForm: FunctionComponent = () => {
 
       <div className="flex flex-col gap-2">
         <PhotoInput handleUploadImages={handleUploadImages} register={register} />
+        <p className="text-sm text-gray-500">Además:</p>
+        <ShowUrlsInput
+          setState={setShowUrlInput}
+          state={showUrlInput}
+        />
       </div>
-      <InputList inputList={linksList} setInputList={setLinksList} placeholder="Agrega un link y presiona Enter" type="link" />
+      { showUrlInput && <InputList inputList={linksList} setInputList={setLinksList} placeholder="Agrega un link y presiona Enter" type="link" />}
       <InputList inputList={tagsList} setInputList={setTagsList} placeholder="Agrega una categoría y presiona Enter" type="tag" />
 
       {images.length > 0 && (
