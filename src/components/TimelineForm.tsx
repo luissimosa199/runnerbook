@@ -8,7 +8,6 @@ import useOptimisticUpdate from "@/hooks/useOptimisticUpdate";
 import PhotoInput from "./PhotoInput";
 import { useSession } from "next-auth/react"
 import InputList from "./LinksInput";
-import TagsInput from "./TagsInput";
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -159,7 +158,6 @@ const TimelineForm: FunctionComponent = () => {
       </div>
       <InputList inputList={linksList} setInputList={setLinksList} placeholder="Agrega un link y presiona Enter" type="link" />
       <InputList inputList={tagsList} setInputList={setTagsList} placeholder="Agrega una categoría y presiona Enter" type="tag" />
-      {/* <TagsInput tagsList={tagsList} setTagsList={setTagsList} /> */}
 
       {images.length > 0 && (
         <div className="flex flex-col gap-2">
