@@ -1,4 +1,3 @@
-import TagsInput from "@/components/TagsInput";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
@@ -9,6 +8,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
+import InputList from "@/components/LinksInput";
 
 const Edit = () => {
 
@@ -173,10 +173,9 @@ const Edit = () => {
             <Link href='/'>Volver</Link>
             <form onSubmit={handleSubmit} className="bg-white border-2 rounded-md flex flex-col gap-4 p-4">
                 <label htmlFor="mainText" className="text-lg font-semibold">Texto</label>
-
                 <textarea value={mainText} onChange={handleTextChange} className="border rounded h-32 p-3 text-md resize-none" />
-
-                <TagsInput tagsList={tagsList} setTagsList={setTagsList} />
+                <InputList placeholder="Agregar categoría" inputList={tagsList} setInputList={setTagsList} type="tag" />
+                <InputList placeholder="Agregar link" inputList={linksList} setInputList={setLinksList} type="link" />
                 <PhotoInput handleUploadImages={handleUploadImages} />
                 <div className="flex flex-col gap-2">
                     {photo && photo.map((e: TimeLineEntryData, index: number) => (

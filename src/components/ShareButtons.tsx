@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp, faFacebook, faTwitter, faLinkedin, faPinterest, faReddit, faTelegram } from '@fortawesome/free-brands-svg-icons';
 
 import { FunctionComponent } from "react";
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 interface ShareButtonsProps {
     url: string
@@ -37,6 +38,9 @@ const ShareButtons: FunctionComponent<ShareButtonsProps> = ({ url, title }) => {
                     </a>
                 </li>
             ))}
+            <button type="button" onClick={() => { navigator.clipboard.writeText(url) }}>
+                <FontAwesomeIcon icon={faCopy} className='text-slate-500' />
+            </button>
         </ul>
     )
 }

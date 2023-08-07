@@ -6,7 +6,7 @@ import { Dispatch, FunctionComponent, SetStateAction, useEffect, useRef, useStat
 interface InputListProps {
     inputList: string[];
     setInputList: Dispatch<SetStateAction<string[]>>;
-    placeholder: string;
+    placeholder?: string;
     suggestions?: string[];
     type: 'tag' | 'link';
 }

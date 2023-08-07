@@ -160,7 +160,6 @@ const TimelineForm: FunctionComponent = () => {
 
       <div className="flex flex-col gap-2">
         <PhotoInput handleUploadImages={handleUploadImages} register={register} />
-        <p className="text-sm text-gray-500">Además:</p>
         <ShowUrlsInput
           setState={setShowUrlInput}
           state={showUrlInput}
