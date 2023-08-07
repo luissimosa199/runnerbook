@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
+import { ChangeEvent, FunctionComponent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TimelineFormInputs } from "@/types";
 import { createDataObject, createPhotoData, handleCaptionChange, handleDeleteImage, handleFileChange, sendData, uploadImages } from "../utils/formHelpers";
@@ -8,9 +8,6 @@ import useOptimisticUpdate from "@/hooks/useOptimisticUpdate";
 import PhotoInput from "./PhotoInput";
 import { useSession } from "next-auth/react"
 import InputList from "./LinksInput";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLink } from "@fortawesome/free-solid-svg-icons";
-import ShowUrlsInput from "./ShowUrlsInput";
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
@@ -18,7 +15,6 @@ const TimelineForm: FunctionComponent = () => {
   const [imagesCaption, setImagesCaptions] = useState<{ idx: number; value: string }[]>([]);
   const [tagsList, setTagsList] = useState<string[]>([]);
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false)
-  const [showUrlInput, setShowUrlInput] = useState<boolean>(false)
   const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
   const [linksList, setLinksList] = useState<string[]>([])
 
@@ -160,12 +156,8 @@ const TimelineForm: FunctionComponent = () => {
 
       <div className="flex flex-col gap-2">
         <PhotoInput handleUploadImages={handleUploadImages} register={register} />
-        <ShowUrlsInput
-          setState={setShowUrlInput}
-          state={showUrlInput}
-        />
       </div>
-      { showUrlInput && <InputList inputList={linksList} setInputList={setLinksList} placeholder="Agrega un link y presiona Enter" type="link" />}
+      
       <InputList inputList={tagsList} setInputList={setTagsList} placeholder="Agrega una categoría y presiona Enter" type="tag" />
 
       {images.length > 0 && (
@@ -190,6 +182,8 @@ const TimelineForm: FunctionComponent = () => {
       <button disabled={submitBtnDisabled} className={` ${submitBtnDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} text-white px-4 py-2 rounded`} type="submit">
         Enviar
       </button>
+
+      <InputList inputList={linksList} setInputList={setLinksList} placeholder="Agrega un link y presiona Enter" type="link" />
     </form>
 
   );
