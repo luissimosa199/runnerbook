@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWhatsapp, faFacebook, faTwitter, faLinkedin, faPinterest, faReddit, faTelegram } from '@fortawesome/free-brands-svg-icons';
 
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 interface ShareButtonsProps {
@@ -11,6 +11,8 @@ interface ShareButtonsProps {
 
 
 const ShareButtons: FunctionComponent<ShareButtonsProps> = ({ url, title }) => {
+
+    const [copySuccess, setCopySuccess] = useState<boolean>(false)
 
     const encodedUrl = encodeURIComponent(url);
     const encodedTitle = encodeURIComponent(title);
@@ -38,8 +40,18 @@ const ShareButtons: FunctionComponent<ShareButtonsProps> = ({ url, title }) => {
                     </a>
                 </li>
             ))}
-            <button type="button" onClick={() => { navigator.clipboard.writeText(url) }}>
+            <button
+                type="button"
+                onClick={() => {
+                    navigator.clipboard.writeText(url);
+                    setCopySuccess(true)
+                    setTimeout(() => {
+                        setCopySuccess(false)
+                    }, 1000);
+                }}
+            >
                 <FontAwesomeIcon icon={faCopy} className='text-slate-500' />
+                {copySuccess && <span className={`ml-2 text-xs`}>Copiado!</span>}
             </button>
         </ul>
     )
