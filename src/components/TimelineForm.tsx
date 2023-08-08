@@ -146,8 +146,6 @@ const TimelineForm: FunctionComponent = () => {
 
   return (
     <form onKeyDown={handleFormKeyDown} onSubmit={handleSubmit(onSubmit)} className="border-2 border-gray-300 flex flex-col gap-4 p-6 rounded max-w-[850px] mx-auto shadow-sm">
-      <h1 className="text-2xl font-semibold mb-2">Subir nuevo Timeline</h1>
-
       <div className="flex flex-col">
         <label htmlFor="mainText" className="relative flex flex-col">
           <textarea placeholder="Escribe algo acá" className="border rounded h-32 p-3 text-md resize-none" id="mainText" {...register("mainText")} />

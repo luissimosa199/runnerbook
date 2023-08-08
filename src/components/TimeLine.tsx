@@ -90,7 +90,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         {tags && tags.length > 0 && tags.join(', ')}
                     </p>
                     <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
-                    <p className="text-sm text-gray-500">{authorName}</p>
+                    <p className="text-sm text-gray-500">{authorName === 'defaultName' ? '' : "authorName"}</p>
                     <div className="mt-4 flex justify-between items-center">
                         <div>
                             {_id !== "newitem" && <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />}
@@ -122,7 +122,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                     }
 
                     {links && links.map((e: string) =>
-                        <div key={e + _id} className="mt-4 max-w-[800px] w-full border-2 p-2 mx-auto bg-white">
+                        <div key={e + _id} className="mt-4 max-w-[800px] w-full mx-auto bg-white">
                             <div className="">
                                 <IFrame src={e} h="800px" />
                             </div>

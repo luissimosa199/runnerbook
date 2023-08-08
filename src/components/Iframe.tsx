@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IframeHTMLAttributes } from "react";
 
 interface IFrameProps extends IframeHTMLAttributes<HTMLIFrameElement> {
@@ -15,14 +15,28 @@ const IFrame: React.FC<IFrameProps> = ({
   h = "100%",
   title = "iframe",
   ...props
-}) => (
-  <iframe
-    src={src}
-    width={w}
-    height={h}
-    title={title}
-    {...props}
-  />
-);
+}) => {
+
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
+  return (
+    <>
+      {loaded &&
+        <iframe
+          src={src}
+          width={w}
+          height={h}
+          title={title}
+          {...props}
+        />}
+
+    </>
+  )
+}
+  ;
 
 export default IFrame;

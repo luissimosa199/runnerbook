@@ -1,13 +1,13 @@
 import { FunctionComponent } from "react";
-import Image from "next/image";
 import { TimeLineEntryProps } from "@/types";
+import { CldImage } from 'next-cloudinary';
 
 const TimeLineEntry: FunctionComponent<TimeLineEntryProps> = ({ data, idx, length }) => {
 
     return (
         <div className="mt-4 w-fit mx-auto bg-white">
             <div className="w-full">
-                <Image
+                <CldImage
                     className="rounded mx-auto"
                     src={data.url}
                     alt={data.caption || 'image'}
