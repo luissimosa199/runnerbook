@@ -79,37 +79,39 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                     siteName="doxa-board"
                 />
             </Head>
-            <div className="bg-white shadow-md rounded-lg p-4">
-                <div className="text-left">
-                    {mainText && mainText.split('\n').map((paragraph, idx) => (
-                        <p key={idx} className={mainText.length > 300 ? "text-md font-normal mb-2" : "text-xl font-semibold mb-2"}>{paragraph}</p>
-                    ))}
-                </div>
-                <p className="text-sm text-gray-600 mt-2">
-                    {tags && tags.length > 0 && tags.join(', ')}
-                </p>
-                <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
-                <p className="text-sm text-gray-500">{authorName}</p>
-                <div className="mt-4 flex justify-between items-center">
-                    <div>
-                        {_id !== "newitem" && <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />}
+            <div className="bg-white shadow-md rounded-lg py-4">
+                <div className="px-4">
+                    <div className="text-left">
+                        {mainText && mainText.split('\n').map((paragraph, idx) => (
+                            <p key={idx} className={mainText.length > 300 ? "text-md font-normal mb-2" : "text-xl font-semibold mb-2"}>{paragraph}</p>
+                        ))}
                     </div>
-                    <div>
+                    <p className="text-sm text-gray-600 mt-2">
+                        {tags && tags.length > 0 && tags.join(', ')}
+                    </p>
+                    <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
+                    <p className="text-sm text-gray-500">{authorName}</p>
+                    <div className="mt-4 flex justify-between items-center">
+                        <div>
+                            {_id !== "newitem" && <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />}
+                        </div>
+                        <div>
 
-                        {_id !== "newitem" && <Link
-                            className="text-blue-500 hover:text-blue-700 transition ease-in-out duration-150"
-                            href={`/timeline/edit/${_id}`}
-                        >
-                            <FontAwesomeIcon icon={faPenToSquare} size="lg" />
-                        </Link>}
+                            {_id !== "newitem" && <Link
+                                className="text-blue-500 hover:text-blue-700 transition ease-in-out duration-150"
+                                href={`/timeline/edit/${_id}`}
+                            >
+                                <FontAwesomeIcon icon={faPenToSquare} size="lg" />
+                            </Link>}
 
-                        {_id !== "newitem" && session?.user?.email === authorId && <button onClick={handleDeleteTimeline}>
-                            <FontAwesomeIcon icon={faTrashCan} size="lg" className="text-red-500 hover:text-red-700 transition ease-in-out duration-150 ml-2" />
-                        </button>}
+                            {_id !== "newitem" && session?.user?.email === authorId && <button onClick={handleDeleteTimeline}>
+                                <FontAwesomeIcon icon={faTrashCan} size="lg" className="text-red-500 hover:text-red-700 transition ease-in-out duration-150 ml-2" />
+                            </button>}
 
+                        </div>
                     </div>
                 </div>
-                <div className="mt-6">
+                <div className="mt-6 ">
                     {timeline && timeline.map((e: TimeLineEntryData,) =>
                         <TimeLineEntry
                             key={e.idx}
@@ -120,9 +122,9 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                     }
 
                     {links && links.map((e: string) =>
-                        <div key={e+_id} className="mt-4 max-w-[800px] w-full border-2 p-2 mx-auto bg-white">
+                        <div key={e + _id} className="mt-4 max-w-[800px] w-full border-2 p-2 mx-auto bg-white">
                             <div className="">
-                                <IFrame src={e} h="500px" />
+                                <IFrame src={e} h="800px" />
                             </div>
                         </div>
                     )}

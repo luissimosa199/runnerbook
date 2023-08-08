@@ -5,7 +5,7 @@ import { TimeLineEntryProps } from "@/types";
 const TimeLineEntry: FunctionComponent<TimeLineEntryProps> = ({ data, idx, length }) => {
 
     return (
-        <div className="mt-4 border-2 w-fit p-2 mx-auto bg-white">
+        <div className="mt-4 w-fit mx-auto bg-white">
             <div className="w-full">
                 <Image
                     className="rounded mx-auto"
