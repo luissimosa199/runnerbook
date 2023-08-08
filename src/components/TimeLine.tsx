@@ -65,7 +65,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
 
 
 
-    const baseUrl = "https://doxa-board-dev.vercel.app"
+    const baseUrl = "http://92.72.11.6:3000"
     const timeLineUrl = baseUrl + `/timeline/${_id}`
 
     return (

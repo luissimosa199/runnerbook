@@ -43,9 +43,10 @@ const ShareButtons: FunctionComponent<ShareButtonsProps> = ({ url, title }) => {
             <button
                 type="button"
                 onClick={() => {
-                    console.log(navigator, url)
+                    console.log(navigator, navigator.clipboard, url)
 
                     navigator.clipboard.writeText(url);
+                    
 
                     setCopySuccess(true)
                     setTimeout(() => {
