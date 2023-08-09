@@ -84,7 +84,9 @@ const Mainboard: FunctionComponent = () => {
         <h1 className="text-xl text-center font-bold m-4">Todas las publicaciones</h1>
       </div>
       <UserCard
-        imageSrc="https://randomuser.me/api/portraits/men/5.jpg"
+        // 
+        imageSrc="/noprofile.png"
+        // 
         name="Juan Silva"
         description="Ciclista Amateur"
       />

@@ -1,0 +1,61 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import dbConnect from "../../../db/dbConnect";
+import { UserModel } from "@/db/models/userModel";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  await dbConnect();
+
+  const { username } = req.query;
+  if (!username) {
+    return res.status(400).json({ error: "Username is required" });
+  }
+
+  try {
+    if (req.method === "GET") {
+      const { page } = req.query;
+      const perPage = 10;
+      const skip = page ? parseInt(page as string) * perPage : 0;
+      const response = await UserModel.findOne({ email: username })
+        .select("photos")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(perPage)
+        .lean();
+
+      if (response && !response.photos) {
+        return res.status(200).json({ photos: [] });
+      }
+      return res.status(200).json(response!.photos);
+
+    } else if (req.method === "POST") {
+
+      const { photos } = req.body;
+
+      if (!photos || !Array.isArray(photos)) {
+        return res
+          .status(400)
+          .json({ error: "Photos are required and must be an array" });
+      }
+
+      const updatedUser = await UserModel.findOneAndUpdate(
+        { email: username },
+        { $push: { photos: { $each: photos } } },
+        { new: true }
+      ).select("photos");
+
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.status(200).json(photos);
+    } else {
+      return res.status(405).json({ error: "Method not allowed" });
+    }
+  } catch (error) {
+    console.error("Error in API handler:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+}

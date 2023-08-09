@@ -63,8 +63,6 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
         }
     }
 
-
-
     const baseUrl = "http://62.72.11.6:3000"
     const timeLineUrl = baseUrl + `/timeline/${_id}`
 
@@ -90,7 +88,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         {tags && tags.length > 0 && tags.join(', ')}
                     </p>
                     <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
-                    <p className="text-sm text-gray-500">{authorName === 'defaultName' ? '' : "authorName"}</p>
+                    <p className="text-sm text-gray-500 capitalize">{authorName === "authorName" ? "" : authorName}</p>
                     <div className="mt-4 flex justify-between items-center">
                         <div>
                             {_id !== "newitem" && <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />}

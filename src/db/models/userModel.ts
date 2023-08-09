@@ -24,6 +24,9 @@ export class User {
   image?: string;
 
   @prop()
+  photos?: string[];
+
+  @prop()
   emailVerified?: Date | null;
 
   static async hashPassword(password: string) {
