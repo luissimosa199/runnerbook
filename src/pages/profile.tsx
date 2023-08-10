@@ -9,6 +9,7 @@ import PhotoInput from "@/components/PhotoInput"
 import UserPhotos from "@/components/UserPhotos"
 import { handleFileAdding, uploadImages } from "@/utils/formHelpers"
 import Link from 'next/link';
+import ProfilePicture from '@/components/ProfilePicture';
 
 const Profile = () => {
 
@@ -103,7 +104,9 @@ const Profile = () => {
             const avatarUrl = avatarArr![0];
             const serverResponse = await updateAvatarOnServer(avatarUrl);
 
-            // updating not working
+            // does not update the second time
+            // queryClient.setQueryData([session?.user?.email, 'profilePicture'], avatarUrl)
+            queryClient.invalidateQueries([session?.user?.email, 'profilePicture'])
         } catch (error) {
             console.error("Error updating avatar:", error);
         }
@@ -123,17 +126,7 @@ const Profile = () => {
                 <h1 className="text-3xl font-bold mb-8 text-gray-700">Perfil</h1>
 
                 <div className="flex justify-around items-center border rounded-lg p-6 bg-white shadow-md space-x-8">
-                    <div className="flex flex-col items-center">
-                        <Image
-                            src={session.user.image || '/noprofile.png'}
-                            width={128}
-                            height={128}
-                            alt={`${session.user.name}'s Avatar`}
-                            className="w-32 h-32 object-cover rounded-full border mb-4"
-                        />
-                        <PhotoInput handleUploadImages={handleChangeAvatar} variant="small" />
-                    </div>
-
+                    <ProfilePicture handleChangeAvatar={handleChangeAvatar} username={session.user.email as string} />
                     <div className="text-center">
                         <p className="font-bold text-xl mb-2">{session.user.name}</p>
                         <p className="italic mb-4 text-gray-600">{session.user.email}</p>

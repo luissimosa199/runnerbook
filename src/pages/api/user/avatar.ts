@@ -17,8 +17,6 @@ export default async function handler(
     if (req.method === "POST") {
       const { image } = req.body;
 
-      console.log(image)
-
       if (!image || typeof image !== "string") {
         return res
           .status(400)
@@ -36,6 +34,13 @@ export default async function handler(
       }
 
       return res.status(200).json({ image: updatedUser.image });
+    } else if (req.method === "GET") {
+      const user = await UserModel.findOne({ email: username }).select("image");
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return res.status(200).json({ image: user.image });
     } else {
       return res.status(405).json({ error: "Method not allowed" });
     }
