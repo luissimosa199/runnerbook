@@ -1,9 +1,12 @@
 import React from 'react'
 import { useSession, signIn, signOut } from "next-auth/react"
+import Image from 'next/image'
 
 const Session = () => {
 
     const { data: session, status } = useSession()
+
+    console.log(session)
 
     if (status === "loading") {
         return <div>Cargando...</div>
@@ -13,6 +16,7 @@ const Session = () => {
         return (
             <div>
                 <p>Logueado como {session.user.email}</p>
+                <Image width={100} height={100} src={session.user.image || ""} alt="" />
                 <button onClick={() => signOut()}>Salir</button>
             </div>
         )

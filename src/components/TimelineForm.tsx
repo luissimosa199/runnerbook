@@ -18,8 +18,6 @@ const TimelineForm: FunctionComponent = () => {
   const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
   const [linksList, setLinksList] = useState<string[]>([])
 
-
-
   const queryClient = useQueryClient();
 
   const { data: session } = useSession();
@@ -79,7 +77,6 @@ const TimelineForm: FunctionComponent = () => {
 
     }
   );
-
 
   const {
     register,

@@ -6,7 +6,6 @@ import { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth";
 import { Adapter } from "next-auth/adapters";
-import GithubProvider from "next-auth/providers/github";
 import dbConnect from "@/db/dbConnect";
 import { UserModel } from "@/db/models/userModel";
 
@@ -25,11 +24,6 @@ export interface CustomNextApiResponse<T = any> extends NextApiResponse<T> {
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
   providers: [
-    GithubProvider({
-      clientId: process.env.GITHUB_ID || "",
-      clientSecret: process.env.GITHUB_SECRET || "",
-    }),
-
     CredentialsProvider({
       name: "credentials",
       id: "credentials",
@@ -64,6 +58,7 @@ export const authOptions: NextAuthOptions = {
             id: user._id,
             name: user.name,
             email: user.email,
+            image: user.image,
           };
         } catch (error) {
           console.error(error);
@@ -74,6 +69,17 @@ export const authOptions: NextAuthOptions = {
 
     // ...add more providers here
   ],
+
+  callbacks: {
+    // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
+    jwt({ token, trigger, session }) {
+      if (trigger === "update" && session) {
+        // Note, that `session` can be any arbitrary object, remember to validate it!
+        token.image = session.image;
+      }
+      return token;
+    },
+  },
 
   adapter: MongoDBAdapter(clientPromise) as Adapter,
 
