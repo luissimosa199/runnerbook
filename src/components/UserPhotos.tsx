@@ -69,14 +69,14 @@ const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
     }
 
     return (
-        <div className="space-y-4">
+        <div className="flex space-x-4 overflow-x-auto py-4 px-2">
             {data && data.length > 0
                 ? data.map((e: string) => {
                     return (
-                        <div key={e} className="flex items-center gap-4 bg-gray-100 p-4 rounded-md">
+                        <div key={e} className="relative inline-block">
                             <button
                                 onClick={() => { handleDelete(e) }}
-                                className="bg-red-500 text-white p-2 w-8 h-8 rounded-full hover:bg-red-600 flex justify-center items-center transition duration-300"
+                                className=" w-8 absolute top-0 right-0 bg-gray-300 text-gray-700 p-1 rounded-full hover:bg-gray-400 transition duration-300"
                             >
                                 X
                             </button>
@@ -87,7 +87,6 @@ const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
                 : <p className="text-gray-600 italic">No hay fotos para mostrar</p>
             }
         </div>
-
     )
 }
 
