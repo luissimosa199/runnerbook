@@ -43,17 +43,17 @@ const LastTenUserTimeline: FunctionComponent<LastTenUserTimelineProps> = ({ user
                             {e.mainText && <p className="text-xl mb-4 font-semibold">{e.mainText}</p>}
 
                             {e.photo && e.photo.length > 0 && (
-                                <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+                                <div className="flex gap-2">
                                     {e.photo.map((image: any, imageIdx: number) => (
-                                        <div key={imageIdx} className="w-full h-20 overflow-hidden rounded">
-                                            <CldImage src={image.url} alt={image.caption || 'Timeline Image'} width={100} height={100} />
+                                        <div key={imageIdx} className="w-fit overflow-hidden rounded">
+                                            <CldImage src={image.url} alt={image.caption || 'Timeline Image'} width={200} height={200} />
                                         </div>
                                     ))}
                                 </div>
                             )}
 
                             {e.links && e.links.length > 0 && (
-                                <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2 lg:grid-cols-3">
+                                <div className="flex flex-col gap-2">
                                     {e.links.map((link: string) => (
                                         <a
                                             key={link}
