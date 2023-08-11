@@ -3,6 +3,7 @@ import { FunctionComponent } from "react";
 import { useSession, signOut } from "next-auth/react"
 import { useRouter } from "next/router";
 import Link from "next/link";
+import ProfilePicture from "./ProfilePicture";
 
 interface UserCardProps {
     imageSrc: string;
@@ -29,13 +30,7 @@ const UserCard: FunctionComponent<UserCardProps> = ({ imageSrc, name, descriptio
 
                 <div className="bg-white shadow-md rounded p-4 flex flex-col items-center mb-4">
                     <Link href="/profile">
-                    <Image
-                        src={session.user.image || imageSrc}
-                        width={128}
-                        height={128}
-                        alt={`${name}'s Avatar`}
-                        className="w-16 h-16 object-cover rounded-full mb-4 md:mb-0"
-                    />
+                        <ProfilePicture username={session.user.email as string} />
                     </Link>
                     <div className="text-center">
                         <p className="font-bold">{session.user.name}</p>

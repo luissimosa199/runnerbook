@@ -1,14 +1,12 @@
 import Image from 'next/image'
-import { ChangeEvent, FunctionComponent } from 'react';
+import { FunctionComponent } from 'react';
 import { useQuery } from 'react-query';
-import PhotoInput from './PhotoInput';
 
 interface ProfilePictureProps {
     username: string;
-    handleChangeAvatar: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
 }
 
-const ProfilePicture: FunctionComponent<ProfilePictureProps> = ({ username, handleChangeAvatar }) => {
+const ProfilePicture: FunctionComponent<ProfilePictureProps> = ({ username }) => {
 
     const fetchProfilePicture = async () => {
         const response = await fetch(`/api/user/avatar/?username=${encodeURIComponent(username as string)}`)
@@ -26,7 +24,7 @@ const ProfilePicture: FunctionComponent<ProfilePictureProps> = ({ username, hand
         )
     }
 
-    if(isError){
+    if (isError) {
         return (
             <div className="flex flex-col items-center">
                 <div className="w-32 h-32 object-cover rounded-full border mb-4">
@@ -43,9 +41,8 @@ const ProfilePicture: FunctionComponent<ProfilePictureProps> = ({ username, hand
                 width={128}
                 height={128}
                 alt={`${username}'s Avatar`}
-                className="w-32 h-32 object-cover rounded-full border mb-4"
+                className="w-32 h-32 object-cover rounded-full border-2 border-gray-300 mb-5"
             />
-            <PhotoInput handleUploadImages={handleChangeAvatar} variant="small" id="profilepicture" />
         </div>
     )
 }

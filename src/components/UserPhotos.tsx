@@ -69,24 +69,38 @@ const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
     }
 
     return (
-        <div className="flex space-x-4 overflow-x-auto py-4 px-2">
-            {data && data.length > 0
-                ? data.map((e: string) => {
-                    return (
-                        <div key={e} className="relative inline-block">
+        <>
+            <style>{`
+                .container::-webkit-scrollbar {
+                    width: 6px; 
+                    height: 6px; 
+                }
+
+                .container::-webkit-scrollbar-thumb {
+                    background-color: rgba(155, 155, 155, 0.7);
+                    border-radius: 4px;
+                }
+            `}</style>
+            <div className="flex container space-x-2 md:space-x-4 overflow-x-auto py-12 px-2 whitespace-nowrap mb-4" style={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(155, 155, 155, 0.7) transparent'
+            }}>
+                {data && data.length > 0
+                    ? data.map((e: string) => (
+                        <div key={e} className="relative inline-block w-fit flex-shrink-0">
                             <button
                                 onClick={() => { handleDelete(e) }}
-                                className=" w-8 absolute top-0 right-0 bg-gray-300 text-gray-700 p-1 rounded-full hover:bg-gray-400 transition duration-300"
+                                className="w-6 h-6 flex justify-center items-center md:h-8 md:w-8 absolute top-0 right-0 bg-gray-300 text-gray-700 p-1 rounded-full hover:bg-gray-400 transition duration-300"
                             >
                                 X
                             </button>
-                            <CldImage alt="" src={e} width={150} height={150} className="object-cover rounded-md shadow" />
+                            <CldImage alt="" src={e} width={100} height={100} className="object-cover rounded-md shadow" />
                         </div>
-                    )
-                })
-                : <p className="text-gray-600 italic">No hay fotos para mostrar</p>
-            }
-        </div>
+                    ))
+                    : <p className="text-gray-600 italic">No hay fotos para mostrar</p>
+                }
+            </div>
+        </>
     )
 }
 

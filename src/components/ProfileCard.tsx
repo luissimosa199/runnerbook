@@ -3,6 +3,7 @@ import ProfilePicture from './ProfilePicture'
 import { signOut, useSession } from 'next-auth/react'
 import { useQueryClient } from 'react-query'
 import { uploadImages } from '@/utils/formHelpers'
+import PhotoInput from './PhotoInput'
 
 const ProfileCard = () => {
 
@@ -51,17 +52,23 @@ const ProfileCard = () => {
             console.error("Error updating avatar:", error);
         }
     };
-    
+
     return (
-        <div className="flex justify-around items-center border rounded-lg p-6 bg-white shadow-md space-x-8">
-            <ProfilePicture handleChangeAvatar={handleChangeAvatar} username={session!.user!.email as string} />
+        <div className="flex flex-col md:flex-row justify-around items-center border rounded-lg p-6 bg-white shadow-lg">
+            <div className="flex flex-col items-center relative">
+                <ProfilePicture username={session!.user!.email as string} />
+                <div className="border-2 absolute bottom-0 left-0 bg-white h-12 w-12 rounded-full overflow-hidden flex justify-center">
+                    <PhotoInput handleUploadImages={handleChangeAvatar} variant="small" id="profilepicture" />
+                </div>
+            </div>
+
             <div className="text-center">
-                <p className="font-bold text-xl mb-2">{session!.user!.name}</p>
-                <p className="italic mb-4 text-gray-600">{session!.user!.email}</p>
+                <p className="font-bold text-2xl mb-3">{session!.user!.name}</p>
+                <p className="italic mb-6 text-gray-600">{session!.user!.email}</p>
                 <button
                     type="button"
                     onClick={() => signOut()}
-                    className="text-sm bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition duration-300"
+                    className="text-sm bg-red-500 text-white py-2 px-5 rounded-md hover:bg-red-600 transition duration-300"
                 >
                     Cerrar Sesión
                 </button>

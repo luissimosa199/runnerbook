@@ -4,7 +4,7 @@ import UserPhotos from "./UserPhotos"
 import { faX } from "@fortawesome/free-solid-svg-icons"
 import Image from 'next/image'
 import { useSession } from "next-auth/react"
-import { ChangeEvent, Dispatch, FunctionComponent, SetStateAction, useState } from "react"
+import { ChangeEvent, FunctionComponent, useState } from "react"
 import { handleFileAdding, uploadImages } from "@/utils/formHelpers"
 import { useMutation, useQueryClient } from "react-query"
 
