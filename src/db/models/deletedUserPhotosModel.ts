@@ -1,7 +1,12 @@
 import { prop } from "@typegoose/typegoose";
-import { Timeline } from "./timelineModel";
 
-export class DeletedTimeline extends Timeline {
+export class DeletedUserPhoto {
   @prop({ default: () => new Date() })
   deletedAt: Date;
+
+  @prop()
+  user: string;
+
+  @prop()
+  url: string;
 }

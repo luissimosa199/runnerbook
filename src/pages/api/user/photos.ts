@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../db/dbConnect";
 import { UserModel } from "@/db/models/userModel";
+import { DeletedUserPhotoModel } from "@/db/models";
 
 export default async function handler(
   req: NextApiRequest,
@@ -58,8 +59,14 @@ export default async function handler(
       if (!photo) {
           return res.status(400).json({ error: "Photo URL is required" });
       }
-  
-      // Remove the specified photo URL from the user's photos array
+
+      const deletedUserPhoto = new DeletedUserPhotoModel({
+        user: username,
+        url: photo,
+      });
+
+      await deletedUserPhoto.save();
+
       const updatedUser = await UserModel.findOneAndUpdate(
           { email: username },
           { $pull: { photos: photo } },
