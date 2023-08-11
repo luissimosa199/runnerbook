@@ -9,13 +9,14 @@ interface PhotoInput {
     register?: UseFormRegister<TimelineFormInputs>;
     label?: string;
     variant?: "default" | "small";
+    id?: string;
 }
 
-const PhotoInput: FunctionComponent<PhotoInput> = ({ handleUploadImages, register, label = "Fotos: ", variant = "default" }) => {
+const PhotoInput: FunctionComponent<PhotoInput> = ({ handleUploadImages, register, label = "Fotos: ", variant = "default", id = "photo" }) => { // Add id to props destructuring
     const isSmall = variant === "small";
     
     return (
-        <label htmlFor="photo" className={`relative flex flex-col items-center justify-center p-4 border rounded hover:bg-gray-200 cursor-pointer ${isSmall ? "p-2" : ""}`}>
+        <label htmlFor={id} className={`relative flex flex-col items-center justify-center p-4 border rounded hover:bg-gray-200 cursor-pointer ${isSmall ? "p-2" : ""}`}>
             <i className={`mb-2 text-lg text-gray-500 ${isSmall ? "text-base mb-1" : ""}`}>
                 <FontAwesomeIcon icon={faUpload} />
             </i>
@@ -24,7 +25,7 @@ const PhotoInput: FunctionComponent<PhotoInput> = ({ handleUploadImages, registe
                 accept="image/png, image/jpeg"
                 className="absolute opacity-0 w-0 h-0"
                 type="file"
-                id="photo"
+                id={id}
                 multiple
                 {...(register ? register("photo") : {})}
                 onChange={handleUploadImages}

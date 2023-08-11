@@ -45,7 +45,7 @@ const ProfilePicture: FunctionComponent<ProfilePictureProps> = ({ username, hand
                 alt={`${username}'s Avatar`}
                 className="w-32 h-32 object-cover rounded-full border mb-4"
             />
-            <PhotoInput handleUploadImages={handleChangeAvatar} variant="small" />
+            <PhotoInput handleUploadImages={handleChangeAvatar} variant="small" id="profilepicture" />
         </div>
     )
 }
