@@ -95,7 +95,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         </div>
                         <div>
 
-                            {_id !== "newitem" && <Link
+                            {_id !== "newitem" && session?.user?.email === authorId && <Link
                                 className="text-blue-500 hover:text-blue-700 transition ease-in-out duration-150"
                                 href={`/timeline/edit/${_id}`}
                             >
@@ -113,9 +113,9 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                     {timeline && timeline.map((e: TimeLineEntryData,) =>
                         <TimeLineEntry
                             key={e.idx}
-                            length={length}
                             idx={e.idx}
                             data={e}
+                            length={length}
                         />)
                     }
 

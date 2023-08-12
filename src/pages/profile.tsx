@@ -1,12 +1,12 @@
-
 import { useSession } from "next-auth/react"
 import LastTenUserTimeline from "@/components/LastTenUserTimeline"
-import Link from 'next/link';
 import UserPhotoGallery from '@/components/UserPhotoGallery';
 import ProfileCard from '@/components/ProfileCard';
+import { useRouter } from "next/router";
 
 const Profile = () => {
 
+    const router = useRouter();
     const { data: session, status } = useSession()
 
     if (status === "loading") {
@@ -31,12 +31,10 @@ const Profile = () => {
         )
     }
 
-    return (
-        <div className="border-2">
-            <div className="text-center">Ingresa para ver tu perfil de usuario</div>
-            <Link href="/login">Inicia Sesión</Link>
-        </div>
-    )
+    if (!session || !session.user) {
+        router.push('/login');
+        return null;
+    }
 }
 
 export default Profile

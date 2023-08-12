@@ -152,27 +152,40 @@ const TimelineForm: FunctionComponent = () => {
       <div className="flex flex-col gap-2">
         <PhotoInput handleUploadImages={handleUploadImages} register={register} />
       </div>
-      
+
       <InputList inputList={tagsList} setInputList={setTagsList} placeholder="Agrega una categoría y presiona Enter" type="tag" />
 
       {images.length > 0 && (
         <div className="flex flex-col gap-2">
-          {images.map((e, idx) => (
-            <div key={idx}>
-              <button className="text-xs text-red-500 mb-1" onClick={(event) => handleDeleteImage(event, idx, setImages, setPreviews)}>
-                Borrar
-              </button>
-              <Image src={e} alt={`Thumbnail ${idx}`} className="mt-2 rounded shadow-md" width={834} height={834} />
-              <input
-                className="border w-full mb-1 p-2 placeholder:text-sm rounded-md"
-                placeholder="Agrega un texto a esta foto"
-                type="text"
-                onChange={(event) => handleCaptionChange(event, idx, imagesCaption, setImagesCaptions)}
-              />
-            </div>
-          ))}
+          {images.map((e, idx) => {
+
+            const isVideo = e.includes("data:video/mp4");
+
+            return (
+              <div key={idx}>
+                <button className="text-xs text-red-500 mb-1" onClick={(event) => handleDeleteImage(event, idx, setImages, setPreviews)}>
+                  Borrar
+                </button>
+                {isVideo ? (
+                  <video controls width="834" height="834" className="mt-2 rounded shadow-md">
+                    <source src={e} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <Image src={e} alt={`Thumbnail ${idx}`} className="mt-2 rounded shadow-md" width={834} height={834} />
+                )}
+                <input
+                  className="border w-full mb-1 p-2 placeholder:text-sm rounded-md"
+                  placeholder="Agrega un texto a esta foto"
+                  type="text"
+                  onChange={(event) => handleCaptionChange(event, idx, imagesCaption, setImagesCaptions)}
+                />
+              </div>
+            );
+          })}
         </div>
       )}
+
 
       <button disabled={submitBtnDisabled} className={` ${submitBtnDisabled ? "bg-blue-300 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-600"} text-white px-4 py-2 rounded`} type="submit">
         Enviar

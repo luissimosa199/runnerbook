@@ -22,7 +22,7 @@ const PhotoInput: FunctionComponent<PhotoInput> = ({ handleUploadImages, registe
             </i>
             {isSmall ? null : <span className="mb-2 text-lg font-semibold">{label}</span>}
             <input
-                accept="image/png, image/jpeg"
+                accept="image/png, image/jpeg, video/mp4"
                 className="absolute opacity-0 w-0 h-0"
                 type="file"
                 id={id}

@@ -44,13 +44,24 @@ const LastTenUserTimeline: FunctionComponent<LastTenUserTimelineProps> = ({ user
 
                             {e.photo && e.photo.length > 0 && (
                                 <div className="flex gap-2">
-                                    {e.photo.map((image: any, imageIdx: number) => (
-                                        <div key={imageIdx} className="w-fit overflow-hidden rounded">
-                                            <CldImage src={image.url} alt={image.caption || 'Timeline Image'} width={200} height={200} />
-                                        </div>
-                                    ))}
+                                    {e.photo.map((media: any, mediaIdx: number) => {
+                                        const isVideo = media.url.includes("/dahu3rii0/video/upload/") && media.url.endsWith(".mp4");
+                                        return (
+                                            <div key={mediaIdx} className="w-fit overflow-hidden rounded">
+                                                {isVideo ? (
+                                                    <video controls width="200" height="200" className="object-cover">
+                                                        <source src={media.url} type="video/mp4" />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                ) : (
+                                                    <CldImage src={media.url} alt={media.caption || 'Timeline Image'} width={200} height={200} />
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             )}
+
 
                             {e.links && e.links.length > 0 && (
                                 <div className="flex flex-col gap-2">

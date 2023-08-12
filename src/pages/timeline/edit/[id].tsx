@@ -184,7 +184,14 @@ const Edit = () => {
                                 <button onClick={handleDeleteImage(index)} className="bg-red-500 text-white p-1 w-7 h-7 rounded-full">
                                     <FontAwesomeIcon icon={faX} style={{ marginBottom: '2px' }} />
                                 </button>
-                                <Image src={e.url} alt="" width={100} height={100} />
+                                {/\/dahu3rii0\/video\/upload\//.test(e.url) ?
+                                    <video width="100" height="100" controls>
+                                        <source src={e.url} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    :
+                                    <Image src={e.url} alt="" width={100} height={100} />
+                                }
                             </div>
                             <input type="text" value={e.caption || ''} onChange={handleCaptionChange(index)} className="border p-2 rounded-md w-full min-[470px]:w-[65%] min-[470px]:mx-auto md:mx-0 " />
                         </div>
@@ -195,11 +202,19 @@ const Edit = () => {
                                 <button onClick={handleDeleteImage(index)} className="bg-red-500 text-white p-1 w-7 h-7 rounded-full">
                                     <FontAwesomeIcon icon={faX} style={{ marginBottom: '2px' }} />
                                 </button>
-                                <Image src={e} alt="" width={100} height={100} />
+                                {/data:video\/mp4/.test(e) ?
+                                    <video width="100" height="100" controls>
+                                        <source src={e} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    :
+                                    <Image src={e} alt="" width={100} height={100} />
+                                }
                             </div>
                             <input type="text" value={newImageCaptions[index] || ''} onChange={handleNewImageCaptionChange(index)} className="border p-2 rounded-md w-full min-[470px]:w-[65%] min-[470px]:mx-auto border-blue-500 md:mx-0 " />
                         </div>
                     ))}
+
                 </div>
 
                 <button type="submit" className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Enviar</button>
