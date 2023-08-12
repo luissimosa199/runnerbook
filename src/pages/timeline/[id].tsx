@@ -68,10 +68,10 @@ export const getServerSideProps: GetServerSideProps<TimelinePageProps> = async (
       length: timeline.length,
       photo: timeline.photo,
       createdAt: timeline.createdAt.toISOString(),
-      tags: timeline.tags,
+      tags: timeline.tags.map(tag => (typeof tag === "string" ? { value: tag } : tag)),
       authorId: timeline.authorId || '',
       authorName: timeline.authorName || '',
-      links: timeline.links || [],
+      links: timeline.links.map(link => (typeof link === "string" ? { value: link } : link)),
     };
 
     return {

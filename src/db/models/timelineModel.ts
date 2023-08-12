@@ -12,6 +12,14 @@ export class Photo {
   caption?: string;
 }
 
+export class Links {
+  @prop()
+  url: string;
+
+  @prop({ default: "" })
+  caption?: string;
+}
+
 @modelOptions({
   schemaOptions: {
     timestamps: true,
@@ -39,7 +47,7 @@ export class Timeline {
   tags: string[];
 
   @prop({ default: () => [] })
-  links: string[];
+  links: Links[];
 
   @prop()
   authorName: string;

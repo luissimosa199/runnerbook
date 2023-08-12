@@ -1,4 +1,4 @@
-import { TimelineFormInputs } from "@/types";
+import { InputItem, TimelineFormInputs } from "@/types";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import Swal from "sweetalert2";
 import { convertToJpeg } from "./convertToJpeg";
@@ -248,9 +248,9 @@ export const createPhotoData = (
 export const createDataObject = (
   data: { mainText?: string },
   photos: any[],
-  tagsList: string[],
+  tagsList: InputItem[],
   session: Session | null,
-  linksList: string[]
+  linksList: InputItem[]
 ) => {
   return {
     mainText: data.mainText || "",

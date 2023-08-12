@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ChangeEvent, FunctionComponent, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TimelineFormInputs } from "@/types";
+import { InputItem, TimelineFormInputs } from "@/types";
 import { createDataObject, createPhotoData, handleCaptionChange, handleDeleteImage, handleFileChange, sendData, uploadImages } from "../utils/formHelpers";
 import { useMutation, useQueryClient } from 'react-query';
 import useOptimisticUpdate from "@/hooks/useOptimisticUpdate";
@@ -13,10 +13,10 @@ const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [imagesCaption, setImagesCaptions] = useState<{ idx: number; value: string }[]>([]);
-  const [tagsList, setTagsList] = useState<string[]>([]);
+  const [tagsList, setTagsList] = useState<InputItem[]>([]);
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false)
   const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
-  const [linksList, setLinksList] = useState<string[]>([])
+  const [linksList, setLinksList] = useState<InputItem[]>([])
 
   const queryClient = useQueryClient();
 

@@ -170,10 +170,15 @@ export const getServerSideProps: GetServerSideProps<MainboardProps> = async () =
       length: item.length,
       photo: item.photo,
       createdAt: item.createdAt.toISOString(),
-      tags: item.tags || [],
-      authorId: item.authorId || '', 
+      tags: item.tags.map(tag => (typeof tag === "string" ? { value: tag } : tag)),
+      authorId: item.authorId || '',
       authorName: item.authorName || '',
-      links: item.links || []
+      links: item.links.map(link => {
+        if (typeof link === "string") {
+          return { value: link };
+        }
+        return link;
+      })
     }));
 
     return {

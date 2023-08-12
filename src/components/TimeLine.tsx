@@ -1,6 +1,6 @@
 import { FunctionComponent } from "react";
 import TimeLineEntry from "./TimeLineEntry";
-import { TimeLineEntryData, TimeLineProps } from "@/types";
+import { InputItem, TimeLineEntryData, TimeLineProps } from "@/types";
 import Head from "next/head";
 import ShareButtons from "./ShareButtons";
 import HeadMetaTags from "./HeadMetaTags";
@@ -119,10 +119,11 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         />)
                     }
 
-                    {links && links.map((e: string) =>
-                        <div key={e + _id} className="mt-4 max-w-[800px] w-full mx-auto bg-white">
+                    {links && links.map((e: InputItem) =>
+                        <div key={e.value + _id} className="mt-4 max-w-[800px] w-full mx-auto bg-white">
                             <div className="">
-                                <IFrame src={e} h="800px" />
+                                <IFrame src={e.value} h="800px" />
+                                <p>{e.caption}</p>
                             </div>
                         </div>
                     )}

@@ -16,10 +16,10 @@ export interface TimeLineProps {
   timeline?: TimeLineEntryData[];
   mainText?: string;
   createdAt: string;
-  tags: string[];
+  tags: InputItem[];
   authorId: string;
   authorName: string;
-  links: string[];
+  links: InputItem[];
 }
 
 //
@@ -30,8 +30,13 @@ export interface TimelineFormInputs {
   photo?: TimeLineEntryData[];
   length: number;
   createdAt: string;
-  tags: string[];
+  tags: InputItem[];
   authorId: string;
   authorName: string;
-  links: string[];
+  links: InputItem[];
+}
+
+export interface InputItem {
+  value: string;
+  caption?: string;
 }

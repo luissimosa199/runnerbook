@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
-import { TimeLineEntryData, TimelineFormInputs } from "@/types";
+import { InputItem, TimeLineEntryData, TimelineFormInputs } from "@/types";
 import PhotoInput from "@/components/PhotoInput";
 import { editData, handleFileAdding, uploadImages } from "@/utils/formHelpers";
 import { useMutation, useQueryClient } from "react-query";
@@ -12,8 +12,8 @@ import InputList from "@/components/LinksInput";
 
 const Edit = () => {
 
-    const [tagsList, setTagsList] = useState<string[]>([]);
-    const [linksList, setLinksList] = useState<string[]>([]);
+    const [tagsList, setTagsList] = useState<InputItem[]>([]);
+    const [linksList, setLinksList] = useState<InputItem[]>([]);
     const [mainText, setMainText] = useState<string>('');
     const [photo, setPhoto] = useState<TimeLineEntryData[]>([]);
     const [newImages, setNewImages] = useState<string[]>([])
@@ -30,11 +30,11 @@ const Edit = () => {
         const fetchTimelineData = async () => {
             const response = await fetch(`/api/timeline/${id}`);
             const timelineData = await response.json()
-            setTagsList(timelineData.tags);
+            setTagsList(timelineData.tags.map((tag: string) => ({ value: tag })));
             setMainText(timelineData.mainText);
             setPhoto(timelineData.photo);
             setAuthor({ id: timelineData.authorId, name: timelineData.authorName })
-            setLinksList(timelineData.links)
+            setLinksList(timelineData.links.map((link: string) => ({ value: link })));
         }
 
         if (id) {
@@ -65,11 +65,10 @@ const Edit = () => {
 
             return editData(payload);
         },
-
         {
             onMutate: async ({ data, urls }) => {
 
-                router.push('/')
+                router.push('/');
 
                 await queryClient.cancelQueries('timelines');
                 const previousTimelines = queryClient.getQueryData<TimelineFormInputs[]>(['timelines']);
@@ -97,7 +96,6 @@ const Edit = () => {
 
                 return { previousTimelines };
             },
-            // On failure, roll back to the previous value
             onError: (err, variables, context) => {
                 if (context?.previousTimelines) {
                     queryClient.setQueryData<TimelineFormInputs[]>(['timelines'], context.previousTimelines);

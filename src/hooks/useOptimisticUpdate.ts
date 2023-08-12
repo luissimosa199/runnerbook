@@ -1,5 +1,5 @@
 import { useQueryClient } from "react-query";
-import { TimeLineEntryData, TimelineFormInputs } from "@/types";
+import { InputItem, TimeLineEntryData, TimelineFormInputs } from "@/types";
 import { getCurrentDateTimeString } from "@/utils/formHelpers";
 import { Session } from "next-auth";
 
@@ -15,7 +15,7 @@ interface Caption {
 
 const useOptimisticUpdate = (
   imagesCaption: Caption[],
-  tagsList: string[],
+  tagsList: InputItem[],
   session: Session | null
 ) => {
   const queryClient = useQueryClient();
