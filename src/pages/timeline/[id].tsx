@@ -23,9 +23,9 @@ const TimelinePage: FunctionComponent<TimelinePageProps> = ({ timelineData }) =>
         <h1 className="text-xl text-center font-bold m-4">Timeline</h1>
       </div>
       <UserCard
-        imageSrc="https://randomuser.me/api/portraits/men/5.jpg"
-        name="Juan Silva"
-        description="Ciclista Amateur"
+        imageSrc="/noprofile.png"
+        name="Anonimo"
+        description="Sin descripcion"
       />
       <div>
         <div key={timelineData._id}>
@@ -68,7 +68,7 @@ export const getServerSideProps: GetServerSideProps<TimelinePageProps> = async (
       length: timeline.length,
       photo: timeline.photo,
       createdAt: timeline.createdAt.toISOString(),
-      tags: timeline.tags.map(tag => (typeof tag === "string" ? { value: tag } : tag)),
+      tags: timeline.tags || [],
       authorId: timeline.authorId || '',
       authorName: timeline.authorName || '',
       links: timeline.links.map(link => (typeof link === "string" ? { value: link } : link)),

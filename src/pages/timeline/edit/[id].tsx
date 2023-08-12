@@ -8,11 +8,11 @@ import { useMutation, useQueryClient } from "react-query";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faX } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
-import InputList from "@/components/LinksInput";
+import InputList from "@/components/InputList";
 
 const Edit = () => {
 
-    const [tagsList, setTagsList] = useState<InputItem[]>([]);
+    const [tagsList, setTagsList] = useState<string[]>([]);
     const [linksList, setLinksList] = useState<InputItem[]>([]);
     const [mainText, setMainText] = useState<string>('');
     const [photo, setPhoto] = useState<TimeLineEntryData[]>([]);
@@ -30,11 +30,18 @@ const Edit = () => {
         const fetchTimelineData = async () => {
             const response = await fetch(`/api/timeline/${id}`);
             const timelineData = await response.json()
-            setTagsList(timelineData.tags.map((tag: string) => ({ value: tag })));
             setMainText(timelineData.mainText);
             setPhoto(timelineData.photo);
             setAuthor({ id: timelineData.authorId, name: timelineData.authorName })
-            setLinksList(timelineData.links.map((link: string) => ({ value: link })));
+            setTagsList(timelineData.tags);
+
+            if (timelineData.links.length > 0) {
+                if (typeof timelineData.links[0] === "string") {
+                    setLinksList(timelineData.links.map((link: string) => ({ value: link })));
+                } else {
+                    setLinksList(timelineData.links);
+                }
+            }
         }
 
         if (id) {

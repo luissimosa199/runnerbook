@@ -84,11 +84,9 @@ const Mainboard: FunctionComponent = () => {
         <h1 className="text-xl text-center font-bold m-4">Todas las publicaciones</h1>
       </div>
       <UserCard
-        // 
         imageSrc="/noprofile.png"
-        // 
-        name="Juan Silva"
-        description="Ciclista Amateur"
+        name="Anonimo"
+        description="Sin descripcion"
       />
       <div className="text-center max-w-[850px] mx-auto flex flex-col mb-4">
         <input placeholder="Buscar por categoría" className="border rounded p-2 mb-4" type="text" onChange={handleSearchBar} />
@@ -170,7 +168,7 @@ export const getServerSideProps: GetServerSideProps<MainboardProps> = async () =
       length: item.length,
       photo: item.photo,
       createdAt: item.createdAt.toISOString(),
-      tags: item.tags.map(tag => (typeof tag === "string" ? { value: tag } : tag)),
+      tags: item.tags || [],
       authorId: item.authorId || '',
       authorName: item.authorName || '',
       links: item.links.map(link => {

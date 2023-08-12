@@ -85,11 +85,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         ))}
                     </div>
                     <p className="text-sm text-gray-600 mt-2">
-                        {
-                            tags && tags.length > 0 &&
-                            tags.map(tag => typeof tag === "string" ? tag : tag.value).join(', ')
-                        }
-
+                        {tags.join(", ")}
                     </p>
                     <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
                     <p className="text-sm text-gray-500 capitalize">{authorName === "authorName" ? "" : authorName}</p>
@@ -141,7 +137,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                             <div key={src + _id} className="mt-4 max-w-[800px] w-full mx-auto bg-white">
                                 <div className="">
                                     <IFrame src={src} h="800px" />
-                                    {caption && <p>{caption}</p>}
+                                    {caption && <p className="text-lg text-gray-500 mt-2 ml-2">{caption}</p>}
                                 </div>
                             </div>
                         );

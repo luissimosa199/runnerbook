@@ -1,4 +1,4 @@
-import { TimelineFormInputs } from '@/types'
+import { InputItem, TimelineFormInputs } from '@/types'
 import formatDateString from '@/utils/formatDateString'
 import { CldImage } from 'next-cloudinary'
 import { FunctionComponent } from 'react'
@@ -65,15 +65,15 @@ const LastTenUserTimeline: FunctionComponent<LastTenUserTimelineProps> = ({ user
 
                             {e.links && e.links.length > 0 && (
                                 <div className="flex flex-col gap-2">
-                                    {e.links.map((link: string) => (
+                                    {e.links.map((link: InputItem) => (
                                         <a
-                                            key={link}
-                                            href={link}
+                                            key={link.value}
+                                            href={link.value}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="p-4 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-300 text-blue-600 hover:text-blue-800 font-medium break-words"
                                         >
-                                            {link}
+                                            {link.value}
                                         </a>
                                     ))}
                                 </div>

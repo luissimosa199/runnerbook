@@ -7,13 +7,13 @@ import { useMutation, useQueryClient } from 'react-query';
 import useOptimisticUpdate from "@/hooks/useOptimisticUpdate";
 import PhotoInput from "./PhotoInput";
 import { useSession } from "next-auth/react"
-import InputList from "./LinksInput";
+import InputList from "./InputList";
 
 const TimelineForm: FunctionComponent = () => {
   const [images, setImages] = useState<string[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [imagesCaption, setImagesCaptions] = useState<{ idx: number; value: string }[]>([]);
-  const [tagsList, setTagsList] = useState<InputItem[]>([]);
+  const [tagsList, setTagsList] = useState<string[]>([]);
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false)
   const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
   const [linksList, setLinksList] = useState<InputItem[]>([])

@@ -248,7 +248,7 @@ export const createPhotoData = (
 export const createDataObject = (
   data: { mainText?: string },
   photos: any[],
-  tagsList: InputItem[],
+  tagsList: string[],
   session: Session | null,
   linksList: InputItem[]
 ) => {

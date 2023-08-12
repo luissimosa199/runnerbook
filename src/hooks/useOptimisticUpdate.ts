@@ -15,7 +15,7 @@ interface Caption {
 
 const useOptimisticUpdate = (
   imagesCaption: Caption[],
-  tagsList: InputItem[],
+  tagsList: string[],
   session: Session | null
 ) => {
   const queryClient = useQueryClient();

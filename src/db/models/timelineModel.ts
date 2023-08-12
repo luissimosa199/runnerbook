@@ -14,7 +14,7 @@ export class Photo {
 
 export class Links {
   @prop()
-  url: string;
+  value: string;
 
   @prop({ default: "" })
   caption?: string;
