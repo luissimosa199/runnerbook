@@ -85,7 +85,11 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         ))}
                     </div>
                     <p className="text-sm text-gray-600 mt-2">
-                        {tags && tags.length > 0 && tags.join(', ')}
+                        {
+                            tags && tags.length > 0 &&
+                            tags.map(tag => typeof tag === "string" ? tag : tag.value).join(', ')
+                        }
+
                     </p>
                     <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
                     <p className="text-sm text-gray-500 capitalize">{authorName === "authorName" ? "" : authorName}</p>
@@ -119,14 +123,29 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         />)
                     }
 
-                    {links && links.map((e: InputItem) =>
-                        <div key={e.value + _id} className="mt-4 max-w-[800px] w-full mx-auto bg-white">
-                            <div className="">
-                                <IFrame src={e.value} h="800px" />
-                                <p>{e.caption}</p>
+                    {links && links.map((e: string | InputItem, idx: number) => {
+                        let src: string;
+                        let caption: string | undefined;
+
+                        if (typeof e === "object" && e.value) {
+                            src = e.value;
+                            caption = e.caption;
+                        } else if (typeof e === "string") {
+                            src = e;
+                            caption = undefined;
+                        } else {
+                            return null;
+                        }
+
+                        return (
+                            <div key={src + _id} className="mt-4 max-w-[800px] w-full mx-auto bg-white">
+                                <div className="">
+                                    <IFrame src={src} h="800px" />
+                                    {caption && <p>{caption}</p>}
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        );
+                    })}
 
 
                 </div>
