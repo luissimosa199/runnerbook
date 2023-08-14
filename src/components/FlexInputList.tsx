@@ -1,14 +1,43 @@
 import { InputItem } from "@/types";
 import { fetchCategories } from "@/utils/getCategories";
-import { isYtUrl } from "@/utils/isYtUrl";
-import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faGreaterThan, faLink, faX } from "@fortawesome/free-solid-svg-icons";
+import { faGreaterThan, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useRef, useState } from "react";
+
+const tailwindNamedColors = [
+    "black",
+    "white",
+    "rose",
+    "pink",
+    "fuchsia",
+    "purple",
+    "violet",
+    "indigo",
+    "blue",
+    "lightBlue",
+    "cyan",
+    "teal",
+    "emerald",
+    "green",
+    "lime",
+    "yellow",
+    "amber",
+    "orange",
+    "red",
+    "warmGray",
+    "trueGray",
+    "gray",
+    "coolGray",
+    "blueGray"
+] as const;
+
+type TailwindColor = typeof tailwindNamedColors[number];
 
 interface BaseInputListProps {
     placeholder?: string;
     type: 'tag' | 'link';
+    showState?: boolean;
+    primaryColor?: TailwindColor
 }
 
 interface TagProps extends BaseInputListProps {
@@ -21,11 +50,12 @@ interface LinkProps extends BaseInputListProps {
     type: 'link';
     inputList: InputItem[];
     setInputList: Dispatch<SetStateAction<InputItem[]>>;
+
 }
 
 type InputListProps = TagProps | LinkProps;
 
-const InputList: FunctionComponent<InputListProps> = ({ inputList, setInputList, placeholder, type }) => {
+const InputList: FunctionComponent<InputListProps> = ({ inputList, setInputList, placeholder, type, showState, primaryColor = 'blue' }) => {
     const [inputText, setInputText] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -142,10 +172,7 @@ const InputList: FunctionComponent<InputListProps> = ({ inputList, setInputList,
             return (
                 <li key={idx} className="bg-white border rounded-md p-2 mb-2 w-full relative">
                     <div className="flex justify-between items-start">
-                        <div>
-                            {isYtUrl(value) ? <FontAwesomeIcon icon={faYoutube} color="red" /> : <FontAwesomeIcon icon={faLink} />}
-                            <span className={`text-${isYtUrl(value) ? "red" : "blue"}-600 font-medium ml-2`}>{value}</span>
-                        </div>
+                        <span className="text-blue-600 font-medium">{value}</span>
                         <button
                             className="text-xs bg-red-500 font-bold w-5 h-5 rounded-full text-white absolute top-2 right-2"
                             onClick={(event) => {
@@ -190,7 +217,7 @@ const InputList: FunctionComponent<InputListProps> = ({ inputList, setInputList,
                         event.preventDefault();
                         addInput();
                         if (inputRef.current) inputRef.current.focus();
-                    }} className="absolute right-2 top-2 text-lg font-bold rounded-full shadow w-6 h-6 leading-4 text-blue-500 border border-blue-500 bg-white hover:bg-blue-200 hover:text-blue-700">
+                    }} className={`absolute right-2 top-2 text-lg font-bold rounded-full shadow w-6 h-6 leading-4 text-${primaryColor}-500 border border-${primaryColor}-500 bg-white hover:bg-${primaryColor}-200 hover:text-${primaryColor}-700`}>
                         <FontAwesomeIcon icon={faGreaterThan} />
                     </button>
                 </div>
@@ -211,9 +238,10 @@ const InputList: FunctionComponent<InputListProps> = ({ inputList, setInputList,
                 )}
 
             </div>
-            <ul className="flex flex-wrap gap-2 md:justify-between">
-                {type === 'tag' ? renderTagItems() : renderLinkItems()}
-            </ul>
+            {showState &&
+                <ul className="flex flex-wrap gap-2 md:justify-between">
+                    {type === 'tag' ? renderTagItems() : renderLinkItems()}
+                </ul>}
         </div>
     );
 };

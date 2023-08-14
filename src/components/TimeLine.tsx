@@ -12,6 +12,8 @@ import { useSession } from "next-auth/react";
 import Swal from 'sweetalert2';
 import { useQueryClient } from "react-query";
 import IFrame from "./Iframe";
+import { isYtUrl, extractVideoId, extractTimestamp } from "@/utils/isYtUrl";
+import YouTubePlayer from "./YoutubePlayer";
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links }) => {
 
@@ -131,6 +133,22 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                             caption = undefined;
                         } else {
                             return null;
+                        }
+
+   
+
+                        if (isYtUrl(src) && extractVideoId(src)) {
+
+                            const start = extractTimestamp(src)
+
+                            return (
+                                <div key={src + _id} className="mt-4 max-w-[800px] w-full mx-auto bg-white">
+                                    <div className="">
+                                        <YouTubePlayer videoId={extractVideoId(src) as string} h="500px" start={start} />
+                                        {caption && <p className="text-lg text-gray-500 mt-2 ml-2">{caption}</p>}
+                                    </div>
+                                </div>
+                            )
                         }
 
                         return (
