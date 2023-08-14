@@ -79,10 +79,10 @@ const Mainboard: FunctionComponent = () => {
 
   return (
     <>
-      <div className="border flex justify-center items-center">
+      {/* <div className="border flex justify-center items-center">
         <Link className="text-xs" href="/">Volver</Link>
         <h1 className="text-xl text-center font-bold m-4">Todas las publicaciones</h1>
-      </div>
+      </div> */}
       <UserCard
         imageSrc="/noprofile.png"
         name="Anonimo"
