@@ -1,13 +1,12 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const Navbar = () => {
 
-    const [showNavBar, setShowNavBar] = useState<boolean>(false);
+    const [showNavBar, setShowNavBar] = useState<boolean>(false);    
 
     const handleOpenNavBar = (e: any) => {
         e.preventDefault();
-        console.log('hey')
         setShowNavBar(!showNavBar)
     }
 
@@ -16,22 +15,23 @@ const Navbar = () => {
 
             <div className="">
 
-                <button className="cursor-pointer z-50" onClick={()=>{ console.log("hey")}} >
+                <button className="cursor-pointer relative" onClick={handleOpenNavBar}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" />
                     </svg>
+
+                    {showNavBar && <ul tabIndex={0} className="mt-3 p-2 bg-white shadow rounded bg-base-100 w-52 z-40 absolute">
+                        <li><Link href="/">Homepage</Link></li>
+                        <li><Link href="/profile">Profile</Link></li>
+                        <li><a href="/ftp">FTPs</a></li>
+                        <li><a href="/comidas">Comidas</a></li>
+                        <li><a href="/agua">Agua</a></li>
+                        <li><a href="/ejercicio">Ejercicios</a></li>
+                        <li><a href="/notas">Notas</a></li>
+                    </ul>}
+
                     
                 </button>
-
-                {showNavBar && <ul tabIndex={0} className="mt-3 p-2 bg-white shadow bg-base-100 w-52 z-40">
-                    <li><Link href="/">Homepage</Link></li>
-                    <li><Link href="/profile">Profile</Link></li>
-                    <li><a href="/ftp">FTPs</a></li>
-                    <li><a href="/comidas">Comidas</a></li>
-                    <li><a href="/agua">Agua</a></li>
-                    <li><a href="/ejercicio">Ejercicios</a></li>
-                    <li><a href="/notas">Notas</a></li>
-                </ul>}
 
             </div>
 

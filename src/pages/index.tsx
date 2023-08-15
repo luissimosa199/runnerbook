@@ -11,6 +11,7 @@ import TimelineForm from '@/components/TimelineForm'
 import { useInfiniteQuery } from 'react-query';
 import { getTimelines } from '@/utils/getTimelines'
 import CategoriesList from '@/components/CategoriesList'
+import NavBar from '@/components/NavBar'
 
 interface MainboardProps {
   timelineData: TimelineFormInputs[];
@@ -79,10 +80,7 @@ const Mainboard: FunctionComponent = () => {
 
   return (
     <>
-      {/* <div className="border flex justify-center items-center">
-        <Link className="text-xs" href="/">Volver</Link>
-        <h1 className="text-xl text-center font-bold m-4">Todas las publicaciones</h1>
-      </div> */}
+      <NavBar/>
       <UserCard
         imageSrc="/noprofile.png"
         name="Anonimo"
