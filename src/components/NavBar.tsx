@@ -14,23 +14,23 @@ const Navbar = () => {
     return (
         <div className="flex justify-between p-2 bg-base-100">
 
-            <div className="relative">
+            <div className="">
 
-                <button className=" cursor-pointer " onClick={handleOpenNavBar}>
+                <button className="cursor-pointer z-50" onClick={()=>{ console.log("hey")}} >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h7" />
                     </svg>
+                    
                 </button>
 
-                {showNavBar && <ul tabIndex={0} className="mt-3 p-2 bg-white shadow bg-base-100 w-52 absolute z-50">
+                {showNavBar && <ul tabIndex={0} className="mt-3 p-2 bg-white shadow bg-base-100 w-52 z-40">
                     <li><Link href="/">Homepage</Link></li>
                     <li><Link href="/profile">Profile</Link></li>
-
-                    {/* <li><a href="/ftp">FTPs</a></li>
-            <li><a href="/comidas">Comidas</a></li>
-            <li><a href="/agua">Agua</a></li>
-            <li><a href="/ejercicio">Ejercicios</a></li>
-            <li><a href="/notas">Notas</a></li> */}
+                    <li><a href="/ftp">FTPs</a></li>
+                    <li><a href="/comidas">Comidas</a></li>
+                    <li><a href="/agua">Agua</a></li>
+                    <li><a href="/ejercicio">Ejercicios</a></li>
+                    <li><a href="/notas">Notas</a></li>
                 </ul>}
 
             </div>
