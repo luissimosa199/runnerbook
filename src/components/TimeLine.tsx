@@ -14,8 +14,11 @@ import { useQueryClient } from "react-query";
 import IFrame from "./Iframe";
 import { isYtUrl, extractVideoId, extractTimestamp } from "@/utils/isYtUrl";
 import YouTubePlayer from "./YoutubePlayer";
+import Ad from "./Ad";
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links }) => {
+
+    const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
     const { data: session } = useSession()
     const queryClient = useQueryClient();
@@ -65,8 +68,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
         }
     }
 
-    const baseUrl = "http://62.72.11.6:3000"
-    const timeLineUrl = baseUrl + `/timeline/${_id}`
+    const timeLineUrl = BASE_URL + `/timeline/${_id}`
 
     return (
         <div className="mb-4 max-w-[850px] mx-auto">
@@ -81,6 +83,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
             </Head>
             <div className="bg-white shadow-md rounded-lg py-4">
                 <div className="px-4">
+                    <Ad/>
                     <div className="text-left">
                         {mainText && mainText.split('\n').map((paragraph, idx) => (
                             <p key={idx} className={mainText.length > 300 ? "text-md font-normal mb-2" : "text-xl font-semibold mb-2"}>{paragraph}</p>
@@ -135,7 +138,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                             return null;
                         }
 
-   
+
 
                         if (isYtUrl(src) && extractVideoId(src)) {
 

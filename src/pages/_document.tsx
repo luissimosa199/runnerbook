@@ -16,6 +16,9 @@ export default function Document() {
               `
           }}
         />
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2371684572387469"
+          crossOrigin="anonymous"></script>
       </Head>
       <body>
         <Main />
