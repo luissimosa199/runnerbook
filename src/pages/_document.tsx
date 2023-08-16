@@ -1,5 +1,5 @@
-import Navbar from '@/components/NavBar'
-import { Html, Head, Main, NextScript } from 'next/document'
+import Ad from '@/components/Ad';
+import { Html, Head, Main, NextScript } from 'next/document';
 
 export default function Document() {
   return (
@@ -21,6 +21,7 @@ export default function Document() {
           crossOrigin="anonymous"></script>
       </Head>
       <body>
+        <Ad />
         <Main />
         <NextScript />
       </body>

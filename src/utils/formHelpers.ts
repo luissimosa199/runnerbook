@@ -4,6 +4,9 @@ import Swal from "sweetalert2";
 import { convertToJpeg } from "./convertToJpeg";
 import { Session } from "next-auth";
 
+const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+
 export const uploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
   let urls = [];
 
@@ -23,10 +26,10 @@ export const uploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
         }
 
         // Upload to Cloudinary
-        const url = `https://api.cloudinary.com/v1_1/dahu3rii0/upload`;
+        const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("upload_preset", "qxkzlm62");
+        formData.append("upload_preset", `${CLOUDINARY_UPLOAD_PRESET}`);
 
         const response = await fetch(url, {
           method: "POST",

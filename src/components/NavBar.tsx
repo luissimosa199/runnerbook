@@ -11,7 +11,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className="flex justify-between p-2 bg-base-100">
+        <header className="flex justify-between p-2 bg-base-100">
 
             <div className="">
 
@@ -55,7 +55,7 @@ const Navbar = () => {
                 </button>
             </div>
 
-        </div>
+        </header>
     );
 };
 

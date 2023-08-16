@@ -14,7 +14,6 @@ import { useQueryClient } from "react-query";
 import IFrame from "./Iframe";
 import { isYtUrl, extractVideoId, extractTimestamp } from "@/utils/isYtUrl";
 import YouTubePlayer from "./YoutubePlayer";
-import Ad from "./Ad";
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links }) => {
 
@@ -83,7 +82,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
             </Head>
             <div className="bg-white shadow-md rounded-lg py-4">
                 <div className="px-4">
-                    <Ad/>
+                    
                     <div className="text-left">
                         {mainText && mainText.split('\n').map((paragraph, idx) => (
                             <p key={idx} className={mainText.length > 300 ? "text-md font-normal mb-2" : "text-xl font-semibold mb-2"}>{paragraph}</p>
@@ -93,7 +92,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         {tags.join(", ")}
                     </p>
                     <p className="text-sm text-gray-500">{formatDateString(createdAt)}</p>
-                    <p className="text-sm text-gray-500 capitalize">{authorName === "authorName" ? "" : authorName}</p>
+                    <p className="text-sm text-gray-500 capitalize">{authorName === "defaultName" ? "" : authorName}</p>
                     <div className="mt-4 flex justify-between items-center">
                         <div>
                             {_id !== "newitem" && <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />}
