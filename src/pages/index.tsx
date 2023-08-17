@@ -4,14 +4,12 @@ import dbConnect from '@/db/dbConnect'
 import { TimeLineModel } from '@/db/models'
 import { TimelineFormInputs } from '@/types'
 import { GetServerSideProps } from 'next'
-import Link from 'next/link'
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import { debounce } from 'lodash'
 import TimelineForm from '@/components/TimelineForm'
 import { useInfiniteQuery } from 'react-query';
 import { getTimelines } from '@/utils/getTimelines'
 import CategoriesList from '@/components/CategoriesList'
-import NavBar from '@/components/NavBar'
 
 interface MainboardProps {
   timelineData: TimelineFormInputs[];
@@ -80,7 +78,6 @@ const Mainboard: FunctionComponent = () => {
 
   return (
     <>
-      <NavBar/>
       <UserCard
         imageSrc="/noprofile.png"
         name="Anonimo"
@@ -169,12 +166,7 @@ export const getServerSideProps: GetServerSideProps<MainboardProps> = async () =
       tags: item.tags || [],
       authorId: item.authorId || '',
       authorName: item.authorName || '',
-      links: item.links.map(link => {
-        if (typeof link === "string") {
-          return { value: link };
-        }
-        return link;
-      })
+      links: item.links,
     }));
 
     return {

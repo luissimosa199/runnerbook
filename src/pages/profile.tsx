@@ -21,7 +21,6 @@ const Profile = () => {
     if (session && session.user) {
         return (
             <>
-                <Navbar />
                 <div className="p-8 bg-gray-50 space-y-12">
                     <h1 className="text-4xl font-bold mb-10 text-gray-800 border-b-2 pb-3">Perfil</h1>
                     <ProfileCard />
