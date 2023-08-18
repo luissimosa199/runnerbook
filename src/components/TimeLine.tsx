@@ -83,7 +83,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                 />
             </Head>
             <div className="bg-white shadow-md rounded-lg py-4">
-                <div className="mx-2 h-28 ">
+                <div className="mx-2 h-[200px] ">
                     <Adsense
                         client="ca-pub-2371684572387469"
                         slot="3404345466"
