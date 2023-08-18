@@ -101,20 +101,25 @@ const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
                             <div key={e} className="relative inline-block w-fit flex-shrink-0">
                                 <button
                                     onClick={() => { handleDelete(e) }}
-                                    className="w-6 h-6 flex justify-center items-center md:h-8 md:w-8 absolute top-0 right-0 bg-gray-300 text-gray-700 p-1 rounded-full hover:bg-gray-400 transition duration-300"
+                                    className="w-6 h-6 flex justify-center items-center md:h-8 md:w-8 absolute top-0 right-0 bg-gray-300 text-gray-700 p-1 rounded-full hover:bg-gray-400 transition duration-300 z-10"
                                 >
                                     X
                                 </button>
-                                {isVideo ? <video
-                                    controls
-                                    width="300"
-                                    height="300"
-                                    className="rounded mx-auto"
-                                >
-                                    <source src={e} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video> : <CldImage alt="" src={e} width={300} height={300} className="object-cover rounded-md shadow" />}
+                                {isVideo ?
+                                    <video
+                                        controls
+                                        width="300"
+                                        height="300"
+                                        className="rounded mx-auto"
+                                    >
+                                        <source src={e} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    :
+                                    <CldImage alt="" src={e} width={300} height={300} className="object-cover rounded-md shadow" />
+                                }
                             </div>
+
                         )
                     })
                     : <p className="text-gray-600 italic">No hay fotos para mostrar</p>
