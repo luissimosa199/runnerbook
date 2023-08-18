@@ -58,7 +58,14 @@ const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
 
     if (isLoading) {
         return (
-            <div>Cargando...</div>
+            <div className="flex container space-x-2 md:space-x-4 overflow-x-auto py-12 px-2 whitespace-nowrap mb-4 animate-pulse" style={{
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(155, 155, 155, 0.7) transparent'
+            }}>
+                {[...Array(5)].map((_, index) => (
+                    <div key={index} className="relative inline-block w-24 h-24 md:w-32 md:h-32 flex-shrink-0 bg-gray-300 rounded-md"></div>
+                ))}
+            </div>
         )
     }
 

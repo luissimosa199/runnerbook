@@ -82,7 +82,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                 />
             </Head>
             <div className="bg-white shadow-md rounded-lg py-4">
-                <div className="h-24 mx-2">
+                <div className="mx-2">
                     <Ad />
                 </div>
                 <div className="px-4">

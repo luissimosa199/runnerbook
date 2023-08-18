@@ -22,7 +22,28 @@ const LastTenUserTimeline: FunctionComponent<LastTenUserTimelineProps> = ({ user
 
     if (isLoading) {
         return (
-            <div>Cargando...</div>
+            <div className="mt-4 bg-white p-6 rounded-lg shadow-md animate-pulse">
+                <ul className="divide-y divide-gray-200">
+                    {[...Array(3)].map((_, index) => (
+                        <li key={index} className="py-4 space-y-4">
+                            <div className="h-4 bg-gray-300 w-1/3"></div>
+
+                            <div className="h-6 bg-gray-300 w-2/3 my-2"></div>
+
+                            <div className="flex gap-2">
+                                <div className="w-32 h-32 bg-gray-300 rounded"></div>
+                                <div className="w-32 h-32 bg-gray-300 rounded"></div>
+                            </div>
+
+                            <div className="flex flex-col gap-2">
+                                <div className="p-4 bg-gray-300 rounded-lg"></div>
+                                <div className="p-4 bg-gray-300 rounded-lg"></div>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
         )
     }
 
