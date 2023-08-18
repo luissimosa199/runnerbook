@@ -15,6 +15,7 @@ import IFrame from "./Iframe";
 import { isYtUrl, extractVideoId, extractTimestamp } from "@/utils/isYtUrl";
 import YouTubePlayer from "./YoutubePlayer";
 import Ad from "./Ad";
+import { Adsense } from '@ctrl/react-adsense';
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links }) => {
 
@@ -84,6 +85,13 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
             <div className="bg-white shadow-md rounded-lg py-4">
                 <div className="mx-2">
                     <Ad />
+                    <Adsense
+                        client="ca-pub-2371684572387469"
+                        slot="3404345466"
+                        style={{ display: 'block' }}
+                        layout="in-article"
+                        format="fluid"
+                    />
                 </div>
                 <div className="px-4">
 

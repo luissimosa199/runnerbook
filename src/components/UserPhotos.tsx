@@ -93,17 +93,30 @@ const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
                 scrollbarColor: 'rgba(155, 155, 155, 0.7) transparent'
             }}>
                 {data && data.length > 0
-                    ? data.map((e: string) => (
-                        <div key={e} className="relative inline-block w-fit flex-shrink-0">
-                            <button
-                                onClick={() => { handleDelete(e) }}
-                                className="w-6 h-6 flex justify-center items-center md:h-8 md:w-8 absolute top-0 right-0 bg-gray-300 text-gray-700 p-1 rounded-full hover:bg-gray-400 transition duration-300"
-                            >
-                                X
-                            </button>
-                            <CldImage alt="" src={e} width={100} height={100} className="object-cover rounded-md shadow" />
-                        </div>
-                    ))
+                    ? data.map((e: string) => {
+
+                        const isVideo = e.includes("/dahu3rii0/video/upload/") && e.endsWith(".mp4");
+
+                        return (
+                            <div key={e} className="relative inline-block w-fit flex-shrink-0">
+                                <button
+                                    onClick={() => { handleDelete(e) }}
+                                    className="w-6 h-6 flex justify-center items-center md:h-8 md:w-8 absolute top-0 right-0 bg-gray-300 text-gray-700 p-1 rounded-full hover:bg-gray-400 transition duration-300"
+                                >
+                                    X
+                                </button>
+                                {isVideo ? <video
+                                    controls
+                                    width="300"
+                                    height="300"
+                                    className="rounded mx-auto"
+                                >
+                                    <source src={e} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video> : <CldImage alt="" src={e} width={300} height={300} className="object-cover rounded-md shadow" />}
+                            </div>
+                        )
+                    })
                     : <p className="text-gray-600 italic">No hay fotos para mostrar</p>
                 }
             </div>

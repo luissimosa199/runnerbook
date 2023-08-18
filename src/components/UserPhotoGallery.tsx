@@ -78,20 +78,31 @@ const UserPhotoGallery: FunctionComponent = () => {
         <div>
             <h2 className="text-2xl font-semibold mb-4 text-gray-700">Fotos</h2>
             <UserPhotos username={session!.user!.email as string} />
-            <PhotoInput handleUploadImages={handleUploadImages} id="userphotos" variant="small"/>
+            <PhotoInput handleUploadImages={handleUploadImages} id="userphotos" variant="small" />
 
             <div className="mt-4 space-y-4">
-                {newImages && newImages.map((e: string, index: number) => (
-                    <div key={index} className="flex items-center gap-4 bg-gray-100 p-4 rounded-md">
-                        <button
-                            onClick={handleDeleteImage(index)}
-                            className="bg-red-500 text-white p-2 w-8 h-8 rounded-full hover:bg-red-600 flex justify-center items-center transition duration-300"
-                        >
-                            <FontAwesomeIcon icon={faX} />
-                        </button>
-                        <Image src={e} alt="" width={100} height={100} />
-                    </div>
-                ))}
+                {newImages && newImages.map((e: string, index: number) => {
+                    const isVideo = e.includes("data:video/mp4");
+                    return (
+                        <div key={index} className="flex items-center gap-4 bg-gray-100 p-4 rounded-md">
+                            <button
+                                onClick={handleDeleteImage(index)}
+                                className="bg-red-500 text-white p-2 w-8 h-8 rounded-full hover:bg-red-600 flex justify-center items-center transition duration-300"
+                            >
+                                <FontAwesomeIcon icon={faX} />
+                            </button>
+                            {isVideo ? <video
+                                controls
+                                width="100"
+                                height="100"
+                                className="rounded mx-auto"
+                            >
+                                <source src={e} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video> : <Image src={e} alt="" width={100} height={100} />}
+                        </div>
+                    )
+                })}
             </div>
             <button
                 type="button"
