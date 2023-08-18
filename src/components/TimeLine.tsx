@@ -14,6 +14,7 @@ import { useQueryClient } from "react-query";
 import IFrame from "./Iframe";
 import { isYtUrl, extractVideoId, extractTimestamp } from "@/utils/isYtUrl";
 import YouTubePlayer from "./YoutubePlayer";
+import Ad from "./Ad";
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links }) => {
 
@@ -81,8 +82,11 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                 />
             </Head>
             <div className="bg-white shadow-md rounded-lg py-4">
+                <div className="h-24 mx-2">
+                    <Ad />
+                </div>
                 <div className="px-4">
-                    
+
                     <div className="text-left">
                         {mainText && mainText.split('\n').map((paragraph, idx) => (
                             <p key={idx} className={mainText.length > 300 ? "text-md font-normal mb-2" : "text-xl font-semibold mb-2"}>{paragraph}</p>
