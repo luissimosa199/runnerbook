@@ -14,7 +14,6 @@ import { useQueryClient } from "react-query";
 import IFrame from "./Iframe";
 import { isYtUrl, extractVideoId, extractTimestamp } from "@/utils/isYtUrl";
 import YouTubePlayer from "./YoutubePlayer";
-import Ad from "./Ad";
 import { Adsense } from '@ctrl/react-adsense';
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links }) => {
@@ -69,7 +68,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
         }
     }
 
-    const timeLineUrl = BASE_URL + `/timeline/${_id}`
+    const timeLineUrl = BASE_URL + `/nota/${_id}`
 
     return (
         <div className="mb-4 max-w-[850px] mx-auto">
@@ -108,19 +107,20 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         <div>
                             {_id !== "newitem" && <ShareButtons url={timeLineUrl} title={`${mainText?.slice(0, 50)}`} />}
                         </div>
-                        <div>
-
-                            {_id !== "newitem" && session?.user?.email === authorId && <Link
-                                className="text-blue-500 hover:text-blue-700 transition ease-in-out duration-150"
-                                href={`/timeline/edit/${_id}`}
-                            >
-                                <FontAwesomeIcon icon={faPenToSquare} size="lg" />
-                            </Link>}
-
-                            {_id !== "newitem" && session?.user?.email === authorId && <button onClick={handleDeleteTimeline}>
-                                <FontAwesomeIcon icon={faTrashCan} size="lg" className="text-red-500 hover:text-red-700 transition ease-in-out duration-150 ml-2" />
-                            </button>}
-
+                        <div className="w-fit flex gap-2">
+                            {_id !== "newitem" && session?.user?.email === authorId &&
+                                <>
+                                    <Link
+                                        className="text-blue-500 w-6 h-6 hover:text-blue-700 transition ease-in-out duration-150"
+                                        href={`/nota/editar/${_id}`}
+                                    >
+                                        <FontAwesomeIcon icon={faPenToSquare} size="lg" />
+                                    </Link>
+                                    <button className="w-5 h-5" onClick={handleDeleteTimeline}>
+                                        <FontAwesomeIcon icon={faTrashCan} size="lg" className="text-red-500 hover:text-red-700 transition ease-in-out duration-150" />
+                                    </button>
+                                </>
+                            }
                         </div>
                     </div>
                 </div>
@@ -147,8 +147,6 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
                         } else {
                             return null;
                         }
-
-
 
                         if (isYtUrl(src) && extractVideoId(src)) {
 

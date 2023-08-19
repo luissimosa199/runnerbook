@@ -29,7 +29,7 @@ const UserCard: FunctionComponent<UserCardProps> = ({ imageSrc, name, descriptio
             <div className="min-w-full mb-8">
 
                 <div className="bg-white shadow-md rounded p-4 flex flex-col items-center mb-4">
-                    <Link href="/profile">
+                    <Link href="/perfil">
                         <ProfilePicture username={session.user.email as string} />
                     </Link>
                     <div className="text-center">

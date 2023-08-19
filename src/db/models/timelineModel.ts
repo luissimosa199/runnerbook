@@ -32,6 +32,9 @@ export class Timeline {
   _id: string;
 
   @prop()
+  urlSlug: string;
+
+  @prop()
   mainText: string;
 
   @prop({ required: true })

@@ -265,3 +265,58 @@ export const createDataObject = (
     links: linksList,
   };
 };
+
+export const createSlug = (str: string) => {
+  return str
+      .toLowerCase()
+      .replace(/[^\w ]+/g,'')
+      .replace(/ +/g,'-');
+}
+
+export function getTimelineKeyWords(post: TimelineFormInputs, length: number): string {
+  let words: string[] = [];
+  let composedString = "";
+
+  // Helper to add new words without duplicates
+  const addWords = (newWords: string[]) => {
+      for (const word of newWords) {
+          if (!words.includes(word) && word) {
+              words.push(word);
+              composedString = words.join(" ");
+          }
+          if (composedString.length >= length) break;
+      }
+  };
+
+  // Split the mainText into words if available and clean it
+  if (post.mainText) {
+      addWords(post.mainText.split(/\s+/).map(cleanWord));
+  }
+
+  // If not enough words from mainText, use tags, authorName, etc.
+  if (composedString.length < length && post.tags) {
+      addWords(post.tags.map(cleanWord));
+  }
+
+  if (composedString.length < length) {
+      addWords([cleanWord(post.authorName)]);
+  }
+
+  // Add today's date if we still don't have enough words (you can customize the format)
+  while (composedString.length < length) {
+      const today = new Date();
+      const dateString = today.toLocaleDateString("es-419", { year: 'numeric', month: 'long', day: 'numeric' });
+      addWords(dateString.split(' ').map(cleanWord));
+  }
+
+  // Truncate the string if it's too long
+  if (composedString.length > length) {
+      composedString = composedString.slice(0, length);
+  }
+
+  return composedString;
+}
+
+function cleanWord(word: string): string {
+  return word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+}

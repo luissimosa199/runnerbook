@@ -20,6 +20,7 @@ export interface TimeLineProps {
   authorId: string;
   authorName: string;
   links: InputItem[];
+  urlSlug?: string;
 }
 
 //
@@ -34,6 +35,8 @@ export interface TimelineFormInputs {
   authorId: string;
   authorName: string;
   links: InputItem[];
+
+  urlSlug?: string;
 }
 
 export interface InputItem {

@@ -20,7 +20,7 @@ const TimelinePage: FunctionComponent<TimelinePageProps> = ({ timelineData }) =>
     <>
       <div className="border flex justify-center items-center">
         <Link className="text-xs" href="/">Volver</Link>
-        <h1 className="text-xl text-center font-bold m-4">Timeline</h1>
+        <h1 className="text-xl text-center font-bold m-4">Nota</h1>
       </div>
       <UserCard
         imageSrc="/noprofile.png"

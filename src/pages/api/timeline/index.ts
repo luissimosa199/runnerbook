@@ -3,6 +3,7 @@ import { TimeLineModel } from "../../../db/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../db/dbConnect";
 import { TimelineFormInputs } from "@/types";
+import { createSlug, getTimelineKeyWords } from "@/utils/formHelpers";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,7 +21,7 @@ export default async function handler(
     if (tags) {
       const tagsArray = Array.isArray(tags) ? tags : [tags];
       const regexPatterns = tagsArray.map((tag) => new RegExp(`^${tag}`, "i"));
-      
+
       const response = await TimeLineModel.find({
         tags: { $in: regexPatterns },
       })
@@ -39,7 +40,19 @@ export default async function handler(
       res.status(200).json(response);
     }
   } else if (req.method === "POST") {
-    const { mainText, photo, length, tags, authorId, authorName, links } = JSON.parse(req.body) as TimelineFormInputs;
+    const { mainText, photo, length, tags, authorId, authorName, links } =
+      JSON.parse(req.body) as TimelineFormInputs;
+
+    let slug = createSlug(getTimelineKeyWords(JSON.parse(req.body), 35));
+
+    let counter = 1;
+    while (await TimeLineModel.exists({ urlSlug: slug })) {
+      slug =
+        createSlug(getTimelineKeyWords(JSON.parse(req.body), 35)) +
+        "-" +
+        counter;
+      counter++;
+    }
 
     const timeline = new TimeLineModel({
       mainText: mainText || "",
@@ -49,6 +62,7 @@ export default async function handler(
       links: links,
       authorId: authorId,
       authorName: authorName,
+      urlSlug: slug,
     });
 
     await timeline.save();
