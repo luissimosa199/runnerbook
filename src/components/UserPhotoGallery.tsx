@@ -13,6 +13,7 @@ const UserPhotoGallery: FunctionComponent = () => {
     const [newImages, setNewImages] = useState<string[]>([])
     const [imageUploadPromise, setImageUploadPromise] = useState<Promise<any> | null>(null);
     const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+    const [isUploading, setIsUploading] = useState<boolean>(false);
 
     const { data: session } = useSession()
     const queryClient = useQueryClient();
@@ -28,6 +29,7 @@ const UserPhotoGallery: FunctionComponent = () => {
         onSuccess: () => {
             setNewImages([]);
             setUploadedImages([]);
+            setImageUploadPromise(null)
         },
         onError: (_, __, context: any) => {
             queryClient.setQueryData(['userPhotos', session?.user?.email], context.previousData);
@@ -53,12 +55,21 @@ const UserPhotoGallery: FunctionComponent = () => {
 
     const handleUploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
         event.stopPropagation();
-        (await handleFileAdding(event, setNewImages));
-        const uploadPromise = uploadImages(event);
-        setImageUploadPromise(uploadPromise);
-        const urls = await uploadImages(event) as string[];
-        setUploadedImages(prevUrls => [...prevUrls, ...urls]);
+        await handleFileAdding(event, setNewImages);
+        
+        setIsUploading(true);
+        
+        try {
+            const urls = await uploadImages(event) as string[];
+            setImageUploadPromise(Promise.resolve(urls)); 
+            setUploadedImages(prevUrls => [...prevUrls, ...urls]);
+        } catch (error) {
+            console.error("Error uploading images:", error);
+        } finally {
+            setIsUploading(false);
+        }
     };
+    
 
     const handleDeleteImage = (index: number) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault();
@@ -70,8 +81,11 @@ const UserPhotoGallery: FunctionComponent = () => {
 
     const handleSubmit = async () => {
         queryClient.cancelQueries([session?.user?.email, 'userPhotos'])
-        await imageUploadPromise;
-        uploadPhotosMutation.mutate(uploadedImages);
+
+        const uploadedUrls = await imageUploadPromise;
+        if (uploadedUrls && uploadedUrls.length) {
+            uploadPhotosMutation.mutate(uploadedUrls);
+        }
     };
 
     return (
@@ -93,13 +107,13 @@ const UserPhotoGallery: FunctionComponent = () => {
                             </button>
                             {isVideo ? <video
                                 controls
-                                width="100"
-                                height="100"
+                                width="300"
+                                height="300"
                                 className="rounded mx-auto"
                             >
                                 <source src={e} type="video/mp4" />
                                 Your browser does not support the video tag.
-                            </video> : <Image src={e} alt="" width={100} height={100} />}
+                            </video> : <Image src={e} alt="" width={300} height={300} />}
                         </div>
                     )
                 })}
@@ -107,9 +121,10 @@ const UserPhotoGallery: FunctionComponent = () => {
             <button
                 type="button"
                 onClick={handleSubmit}
+                disabled={isUploading}
                 className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
             >
-                Subir
+                {isUploading ? 'Subiendo...' : 'Subir'}
             </button>
         </div>
     )
