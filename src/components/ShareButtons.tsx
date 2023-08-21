@@ -42,6 +42,7 @@ const ShareButtons: FunctionComponent<ShareButtonsProps> = ({ url, title }) => {
             ))}
             <button
                 type="button"
+                className="w-5"
                 onClick={() => {
                     navigator.clipboard.writeText(url);
                     setCopySuccess(true)

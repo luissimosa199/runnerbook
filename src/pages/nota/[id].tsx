@@ -6,6 +6,8 @@ import { TimelineFormInputs } from '@/types';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { FunctionComponent } from 'react';
+import mongoose from 'mongoose';
+
 
 interface TimelinePageProps {
   timelineData: TimelineFormInputs | null;
@@ -39,6 +41,7 @@ const TimelinePage: FunctionComponent<TimelinePageProps> = ({ timelineData }) =>
             authorId={timelineData.authorId}
             authorName={timelineData.authorName}
             links={timelineData.links}
+            urlSlug={timelineData.urlSlug}
           />
         </div>
       </div>
@@ -54,7 +57,13 @@ export const getServerSideProps: GetServerSideProps<TimelinePageProps> = async (
 
     const { id } = context.query;
 
-    const timeline = await TimeLineModel.findById(id).lean();
+    let timeline;
+
+    if (id!.length !== 9) {
+      timeline = await TimeLineModel.findOne({ urlSlug: id }).lean();
+    } else {
+      timeline = await TimeLineModel.findById(id).lean();
+    }
 
     if (!timeline) {
       return {
@@ -64,6 +73,7 @@ export const getServerSideProps: GetServerSideProps<TimelinePageProps> = async (
 
     const timelineData = {
       _id: timeline._id,
+      urlSlug: timeline.urlSlug || "",
       mainText: timeline.mainText,
       length: timeline.length,
       photo: timeline.photo,

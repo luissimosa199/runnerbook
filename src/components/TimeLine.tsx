@@ -16,7 +16,7 @@ import { isYtUrl, extractVideoId, extractTimestamp } from "@/utils/isYtUrl";
 import YouTubePlayer from "./YoutubePlayer";
 import { Adsense } from '@ctrl/react-adsense';
 
-const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links }) => {
+const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links, urlSlug }) => {
 
     const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
@@ -68,7 +68,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
         }
     }
 
-    const timeLineUrl = BASE_URL + `/nota/${_id}`
+    const timeLineUrl = BASE_URL + `/nota/${urlSlug ? urlSlug : _id}`
 
     return (
         <div className="mb-4 max-w-[850px] mx-auto">

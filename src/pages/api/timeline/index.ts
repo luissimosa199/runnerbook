@@ -13,8 +13,6 @@ export default async function handler(
 
   if (req.method === "GET") {
     const { tags, page } = req.query;
-
-    // Calculate the skip value based on the page number and the number of items per page (e.g., 10)
     const perPage = 10;
     const skip = page ? parseInt(page as string) * perPage : 0;
 
