@@ -14,7 +14,7 @@ import { useQueryClient } from "react-query";
 import IFrame from "./Iframe";
 import { isYtUrl, extractVideoId, extractTimestamp } from "@/utils/isYtUrl";
 import YouTubePlayer from "./YoutubePlayer";
-import { Adsense } from '@ctrl/react-adsense';
+import Ad from "./Ad";
 
 const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText, createdAt, tags, _id, authorId, authorName, links, urlSlug }) => {
 
@@ -83,13 +83,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
             </Head>
             <div className="bg-white shadow-md rounded-lg py-4">
                 <div className="mx-2 h-[200px] ">
-                    <Adsense
-                        client="ca-pub-2371684572387469"
-                        slot="3404345466"
-                        style={{ display: 'block' }}
-                        layout="in-article"
-                        format="fluid"
-                    />
+                    <Ad/>
                 </div>
                 <div className="px-4">
 

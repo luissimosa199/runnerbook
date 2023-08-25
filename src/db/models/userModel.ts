@@ -29,6 +29,12 @@ export class User {
   @prop()
   emailVerified?: Date | null;
 
+  @prop({ default: false })
+  disableAds?: boolean;
+
+  @prop({ default: 'USER' })
+  role?: string;
+
   static async hashPassword(password: string) {
     return await bcrypt.hash(password, 10);
   }

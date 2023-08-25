@@ -6,8 +6,6 @@ import { TimelineFormInputs } from '@/types';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { FunctionComponent } from 'react';
-import mongoose from 'mongoose';
-
 
 interface TimelinePageProps {
   timelineData: TimelineFormInputs | null;

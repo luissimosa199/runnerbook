@@ -21,7 +21,7 @@ export default function Document() {
           crossOrigin="anonymous"></script>
       </Head>
       <body>
-        <Ad />
+        {/* <Ad /> */}
         <Main />
         <NextScript />
       </body>

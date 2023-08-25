@@ -4,7 +4,7 @@ import { CldImage } from 'next-cloudinary';
 
 const TimeLineEntry: FunctionComponent<TimeLineEntryProps> = ({ data, idx, length }) => {
 
-    const isVideo = data.url.includes("/dahu3rii0/video/upload/") && data.url.endsWith(".mp4");
+    const isVideo = data.url.includes("/dahu3rii0/video/upload/") && data.url.endsWith(".mp4") || data.url.includes("data:video/mp4");
 
     return (
         <div className="mt-4 w-fit mx-auto bg-white">

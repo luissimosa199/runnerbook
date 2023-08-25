@@ -3,7 +3,7 @@ import { TimeLineModel } from "../../../db/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../db/dbConnect";
 import { TimelineFormInputs } from "@/types";
-import { createSlug, getTimelineKeyWords } from "@/utils/formHelpers";
+import { generateSlug } from "@/utils/formHelpers";
 
 export default async function handler(
   req: NextApiRequest,
@@ -41,14 +41,13 @@ export default async function handler(
     const { mainText, photo, length, tags, authorId, authorName, links } =
       JSON.parse(req.body) as TimelineFormInputs;
 
-    let slug = createSlug(getTimelineKeyWords(JSON.parse(req.body), 35));
+    let baseSlug = generateSlug(JSON.parse(req.body), 35, 50);
+    let slug = baseSlug;
 
     let counter = 1;
+
     while (await TimeLineModel.exists({ urlSlug: slug })) {
-      slug =
-        createSlug(getTimelineKeyWords(JSON.parse(req.body), 35)) +
-        "-" +
-        counter;
+      slug = `${baseSlug}-${counter}`;
       counter++;
     }
 

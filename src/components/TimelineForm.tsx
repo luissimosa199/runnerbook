@@ -26,6 +26,7 @@ const TimelineForm: FunctionComponent = () => {
 
   const mutation = useMutation(
     async ({ data, urls }: { data: Omit<TimelineFormInputs, "_id" | "createdAt">; urls: string[] }) => {
+
       const payload = {
         ...data,
         photo: urls.map((url, photoIdx: number) => {

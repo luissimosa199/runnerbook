@@ -3,9 +3,11 @@ import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import Swal from "sweetalert2";
 import { convertToJpeg } from "./convertToJpeg";
 import { Session } from "next-auth";
+import { v4 as uuidv4 } from "uuid";
 
-const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_UPLOAD_PRESET =
+  process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
 export const uploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
   let urls = [];
@@ -266,57 +268,51 @@ export const createDataObject = (
   };
 };
 
-export const createSlug = (str: string) => {
-  return str
-      .toLowerCase()
-      .replace(/[^\w ]+/g,'')
-      .replace(/ +/g,'-');
-}
+export function generateSlug(
+  post: TimelineFormInputs,
+  minLength: number = 10,
+  maxLength: number = 50
+): string {
+  const components: string[] = [];
 
-export function getTimelineKeyWords(post: TimelineFormInputs, length: number): string {
-  let words: string[] = [];
-  let composedString = "";
-
-  // Helper to add new words without duplicates
-  const addWords = (newWords: string[]) => {
-      for (const word of newWords) {
-          if (!words.includes(word) && word) {
-              words.push(word);
-              composedString = words.join(" ");
-          }
-          if (composedString.length >= length) break;
-      }
+  const cleanWord = (word: string) => {
+    return word.toLowerCase().replace(/[^\w]/g, "");
   };
 
-  // Split the mainText into words if available and clean it
+  // If there's a mainText, add it.
   if (post.mainText) {
-      addWords(post.mainText.split(/\s+/).map(cleanWord));
+    components.push(...post.mainText.split(/\s+/).map(cleanWord));
   }
 
-  // If not enough words from mainText, use tags, authorName, etc.
-  if (composedString.length < length && post.tags) {
-      addWords(post.tags.map(cleanWord));
+  // If the length after adding mainText is less than minimum OR there's no mainText, then consider tags.
+  if (!post.mainText || components.join("-").length < minLength) {
+    if (post.tags) {
+      components.push(...post.tags.map(cleanWord));
+    }
   }
 
-  if (composedString.length < length) {
-      addWords([cleanWord(post.authorName)]);
+  // If the length is still less than minimum after adding mainText and tags, add the author's name.
+  if (components.join("-").length < minLength && post.authorName) {
+    components.push(cleanWord(post.authorName));
   }
 
-  // Add today's date if we still don't have enough words (you can customize the format)
-  while (composedString.length < length) {
-      const today = new Date();
-      const dateString = today.toLocaleDateString("es-419", { year: 'numeric', month: 'long', day: 'numeric' });
-      addWords(dateString.split(' ').map(cleanWord));
+  // If the length is still under the minimum, add the date.
+  if (components.join("-").length < minLength) {
+    const today = new Date();
+    const dateString = today.toISOString().split("T")[0]; // format: "yyyy-mm-dd"
+    components.push(dateString);
   }
 
-  // Truncate the string if it's too long
-  if (composedString.length > length) {
-      composedString = composedString.slice(0, length);
+  // If after all these steps, the length is still under the minimum, append a partial UUID.
+  if (components.join("-").length < minLength) {
+    components.push(uuidv4().slice(0, 5));
   }
 
-  return composedString;
-}
+  // Construct the slug and limit length if necessary
+  let slug = components.join("-");
+  if (slug.length > maxLength) {
+    slug = slug.slice(0, maxLength);
+  }
 
-function cleanWord(word: string): string {
-  return word.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+  return slug;
 }

@@ -105,6 +105,7 @@ const Mainboard: FunctionComponent = () => {
                 authorId={e.authorId}
                 authorName={e.authorName}
                 links={e.links}
+                urlSlug={e.urlSlug}
               />
             </div>
           ))
@@ -125,6 +126,7 @@ const Mainboard: FunctionComponent = () => {
                     authorId={e.authorId}
                     authorName={e.authorName}
                     links={e.links}
+                    urlSlug={e.urlSlug}
                   />
                 </div>
               ))
@@ -159,6 +161,7 @@ export const getServerSideProps: GetServerSideProps<MainboardProps> = async () =
 
     const timelineData = response.map((item) => ({
       _id: item._id,
+      urlSlug: item.urlSlug || "",
       mainText: item.mainText,
       length: item.length,
       photo: item.photo,

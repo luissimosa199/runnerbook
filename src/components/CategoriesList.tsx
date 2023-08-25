@@ -60,7 +60,7 @@ const CategoriesList = () => {
 
                         return (
                             <li key={idx} className={`transform transition-all duration-500 ${idx >= visibleItems && !showAll ? 'opacity-0 scale-0' : 'opacity-100 scale-100'}`}>
-                                <Link className="capitalize py-2 hover:opacity-75" href={`/timeline/search?tags=${displayValue}`}>{displayValue}</Link>
+                                <Link className="capitalize py-2 hover:opacity-75" href={`/nota/search?tags=${displayValue}`}>{displayValue}</Link>
                             </li>
                         )
                     })

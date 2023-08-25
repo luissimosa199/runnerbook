@@ -4,6 +4,7 @@ import { signOut, useSession } from 'next-auth/react'
 import { useQueryClient } from 'react-query'
 import { uploadImages } from '@/utils/formHelpers'
 import PhotoInput from './PhotoInput'
+import AdsSwitch from './AdsSwitch'
 
 const ProfileCard = () => {
 
@@ -72,6 +73,7 @@ const ProfileCard = () => {
                 >
                     Cerrar Sesión
                 </button>
+                <AdsSwitch />
             </div>
         </div>
     )

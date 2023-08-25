@@ -40,20 +40,23 @@ const ShareButtons: FunctionComponent<ShareButtonsProps> = ({ url, title }) => {
                     </a>
                 </li>
             ))}
-            <button
-                type="button"
-                className="w-5"
-                onClick={() => {
-                    navigator.clipboard.writeText(url);
-                    setCopySuccess(true)
-                    setTimeout(() => {
-                        setCopySuccess(false)
-                    }, 1000);
-                }}
-            >
-                <FontAwesomeIcon icon={faCopy} className='text-slate-500' />
+            <div>
+
+                <button
+                    type="button"
+                    className="w-5"
+                    onClick={() => {
+                        navigator.clipboard.writeText(url);
+                        setCopySuccess(true)
+                        setTimeout(() => {
+                            setCopySuccess(false)
+                        }, 1000);
+                    }}
+                >
+                    <FontAwesomeIcon icon={faCopy} className='text-slate-500' />
+                </button>
                 {copySuccess && <span className={`ml-2 text-xs`}>Copiado!</span>}
-            </button>
+            </div>
         </ul>
     )
 }
