@@ -5,6 +5,7 @@ import { useQueryClient } from 'react-query'
 import { uploadImages } from '@/utils/formHelpers'
 import PhotoInput from './PhotoInput'
 import AdsSwitch from './AdsSwitch'
+import { CustomSession } from '@/pages/api/auth/[...nextauth]'
 
 const ProfileCard = () => {
 
@@ -73,7 +74,7 @@ const ProfileCard = () => {
                 >
                     Cerrar Sesión
                 </button>
-                <AdsSwitch />
+                {(session as CustomSession)?.role && <AdsSwitch />}
             </div>
         </div>
     )

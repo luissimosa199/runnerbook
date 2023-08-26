@@ -5,12 +5,16 @@ import { NextAuthOptions } from "next-auth";
 import { Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth from "next-auth";
-import { Adapter } from "next-auth/adapters";
+import { Adapter, AdapterUser } from "next-auth/adapters";
 import dbConnect from "@/db/dbConnect";
 import { UserModel } from "@/db/models/userModel";
 
 export interface CustomSession extends Session {
-  // Add any custom session properties here
+  role?: string;
+}
+
+interface CustomAdapterUser extends AdapterUser {
+  role?: string; // Assuming role is of type string; adjust as necessary
 }
 
 export interface CustomNextApiRequest extends NextApiRequest {
@@ -59,6 +63,7 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             email: user.email,
             image: user.image,
+            role: user.role,
           };
         } catch (error) {
           console.error(error);
@@ -71,13 +76,17 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    // Using the `...rest` parameter to be able to narrow down the type based on `trigger`
-    jwt({ token, trigger, session }) {
-      if (trigger === "update" && session) {
-        // Note, that `session` can be any arbitrary object, remember to validate it!
-        token.image = session.image;
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+        token.role = (user as CustomAdapterUser).role;
+        token.picture = user.image;
       }
       return token;
+    },
+    session: async ({ session, token }) => {
+        (session as CustomSession).role = (token as any).role; 
+        return session;
     },
   },
 
