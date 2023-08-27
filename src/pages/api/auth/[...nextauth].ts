@@ -26,7 +26,7 @@ export interface CustomNextApiResponse<T = any> extends NextApiResponse<T> {
 }
 
 export const authOptions: NextAuthOptions = {
-  // Configure one or more authentication providers
+
   providers: [
     CredentialsProvider({
       name: "credentials",

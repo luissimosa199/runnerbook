@@ -10,6 +10,11 @@ import { faX } from '@fortawesome/free-solid-svg-icons';
 import Link from "next/link";
 import InputList from "@/components/InputList";
 
+type PaginatedQueryData<T> = {
+    pages: T[][];
+    pageParams: any[];
+};
+
 const Edit = () => {
 
     const [tagsList, setTagsList] = useState<string[]>([]);
@@ -21,7 +26,6 @@ const Edit = () => {
     const [uploadedImages, setUploadedImages] = useState<string[]>([]);
     const [newImageCaptions, setNewImageCaptions] = useState<string[]>([]);
     const [author, setAuthor] = useState<{ id: string, name: string }>({ id: '', name: '' });
-
     const queryClient = useQueryClient();
     const router = useRouter()
     const { id } = router.query;
@@ -92,22 +96,34 @@ const Edit = () => {
                     ],
                     length: data.length + urls.length,
                 };
-                queryClient.setQueryData<Omit<TimelineFormInputs, "createdAt">[]>(['timelines'], (old) =>
-                    old?.map((timeline) => {
-                        if (timeline._id === id) {
-                            return newTimelineData;
-                        }
-                        return timeline;
-                    }) || []
-                );
+                queryClient.setQueryData<PaginatedQueryData<Omit<TimelineFormInputs, "createdAt">>>(['timelines'], (old) => {
+                    if (old && Array.isArray(old.pages)) {
+                        return {
+                            ...old,
+                            pages: old.pages.map((page) => {
+                                return page.map((timeline) => {
+                                    if (timeline._id === id) {
+                                        return newTimelineData;
+                                    }
+                                    return timeline;
+                                });
+                            })
+                        };
+                    } else {
+                        console.error("Unexpected data type for 'timelines'", old);
+                        return {
+                            pages: [],      // Return an empty pages array
+                            pageParams: old?.pageParams || [] // Keep the existing pageParams or default to an empty array
+                        };
+                    }
+                });
 
-                return { previousTimelines };
             },
-            onError: (err, variables, context) => {
-                if (context?.previousTimelines) {
-                    queryClient.setQueryData<TimelineFormInputs[]>(['timelines'], context.previousTimelines);
-                }
-            },
+            // onError: (err, variables, context) => {
+            //     if (context?.previousTimelines) {
+            //         queryClient.setQueryData<TimelineFormInputs[]>(['timelines'], context.previousTimelines);
+            //     }
+            // },
         }
     );
 

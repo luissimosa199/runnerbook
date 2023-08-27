@@ -10,11 +10,8 @@ export default async function handler(
   const id = req.query.id as string;
 
   if (req.method === "GET") {
-
     
     const timeline = await TimeLineModel.findById(id);
-    console.log(timeline);
-
 
     if (timeline) {
       res.status(200).json(timeline);
