@@ -15,20 +15,23 @@ const Ad: React.FC = () => {
 
     const showAds = adsVisibilityData ? !adsVisibilityData.disableAds : true;
 
-    if (isLoading) return <p>...</p>;
+    if (isLoading) return <p></p>;
 
     return (
-        <div>
-            {showAds ? <>
-                <Adsense
-                    client="ca-pub-2371684572387469"
-                    slot="3404345466"
-                    style={{ display: 'block' }}
-                    layout="in-article"
-                    format="fluid"
-                />
-            </> : ""}
-        </div>
+        <>
+            {showAds ?
+                <div className="mx-2 h-[200px] ">
+                    <>
+                        <Adsense
+                            client="ca-pub-2371684572387469"
+                            slot="3404345466"
+                            style={{ display: 'block' }}
+                            layout="in-article"
+                            format="fluid"
+                        />
+                    </></div> : ""}
+        </>
+
     );
 }
 

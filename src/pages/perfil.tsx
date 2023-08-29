@@ -3,6 +3,9 @@ import LastTenUserTimeline from "@/components/LastTenUserTimeline"
 import UserPhotoGallery from '@/components/UserPhotoGallery';
 import ProfileCard from '@/components/ProfileCard';
 import { useRouter } from "next/router";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const Profile = () => {
 
@@ -47,7 +50,12 @@ const Profile = () => {
         return (
             <>
                 <div className="p-8 bg-gray-50 space-y-12">
-                    <h1 className="text-4xl font-bold mb-10 text-gray-800 border-b-2 pb-3">Perfil</h1>
+                    <div className="flex gap-2 items-center">
+                        <Link href="/">
+                            <FontAwesomeIcon icon={faArrowLeft} />
+                        </Link>
+                        <h1 className="text-4xl font-bold text-gray-800 border-b-2 pb-3">Perfil</h1>
+                    </div>
                     <ProfileCard />
                     <UserPhotoGallery />
                     <div className="mt-6">

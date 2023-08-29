@@ -12,7 +12,7 @@ interface PhotoInput {
     id?: string;
 }
 
-const PhotoInput: FunctionComponent<PhotoInput> = ({ handleUploadImages, register, label = "Fotos: ", variant = "default", id = "photo" }) => { // Add id to props destructuring
+const PhotoInput: FunctionComponent<PhotoInput> = ({ handleUploadImages, register, label = "Fotos y/o videos: ", variant = "default", id = "photo" }) => { // Add id to props destructuring
     const isSmall = variant === "small";
     
     return (

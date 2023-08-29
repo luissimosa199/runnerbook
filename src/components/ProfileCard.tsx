@@ -6,6 +6,7 @@ import { uploadImages } from '@/utils/formHelpers'
 import PhotoInput from './PhotoInput'
 import AdsSwitch from './AdsSwitch'
 import { CustomSession } from '@/pages/api/auth/[...nextauth]'
+import Link from 'next/link'
 
 const ProfileCard = () => {
 
@@ -74,7 +75,14 @@ const ProfileCard = () => {
                 >
                     Cerrar Sesión
                 </button>
-                {(session as CustomSession)?.role && <AdsSwitch />}
+                <div className="mt-4">
+                    <Link href="/usuarios" className="text-sm bg-blue-500 text-white py-2 px-5 rounded-md hover:bg-blue-600 transition duration-300">
+                        Buscar otros usuarios
+                    </Link>
+                </div>
+                <div>
+                    {(session as CustomSession)?.role && <AdsSwitch />}
+                </div>
             </div>
         </div>
     )
