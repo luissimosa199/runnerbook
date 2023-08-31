@@ -43,3 +43,10 @@ export interface InputItem {
   value: string;
   caption?: string;
 }
+
+export interface User {
+  name: string,
+  email: string,
+  image: string,
+  photos: string[],
+}

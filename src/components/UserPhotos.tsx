@@ -1,12 +1,16 @@
+import { useSession } from 'next-auth/react';
 import { CldImage } from 'next-cloudinary';
 import React, { FunctionComponent } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query';
 
 interface UserPhotosProps {
-    username: string
+    username: string;
+    direction?: "flex-col" | "flex-row"
 }
 
-const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
+const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username, direction = "flex-row" }) => {
+
+    const { data: session} = useSession()
 
     const fetchUserPhotos = async () => {
         const response = await fetch(`/api/user/photos/?username=${encodeURIComponent(username)}`, {
@@ -28,7 +32,7 @@ const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
         return data
     }
 
-    const handleDelete = (e: string) => {
+    const handleDelete = (e: string): void => {
         queryClient.cancelQueries([username, 'userPhotos'])
         mutation.mutate(e)
     }
@@ -88,7 +92,7 @@ const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
                     border-radius: 4px;
                 }
             `}</style>
-            <div className="flex container space-x-2 md:space-x-4 overflow-x-auto py-12 px-2 whitespace-nowrap mb-4" style={{
+            <div className={`flex ${direction} gap-2 items-center container space-x-2 md:space-x-4 overflow-x-auto py-12 px-2 whitespace-nowrap mb-4`} style={{
                 scrollbarWidth: 'thin',
                 scrollbarColor: 'rgba(155, 155, 155, 0.7) transparent'
             }}>
@@ -99,12 +103,14 @@ const UserPhotos: FunctionComponent<UserPhotosProps> = ({ username }) => {
 
                         return (
                             <div key={e} className="relative inline-block w-fit flex-shrink-0">
-                                <button
+
+                                {session?.user?.email === username && <button
                                     onClick={() => { handleDelete(e) }}
                                     className="w-6 h-6 flex justify-center items-center md:h-8 md:w-8 absolute top-0 right-0 bg-gray-300 text-gray-700 p-1 rounded-full hover:bg-gray-400 transition duration-300 z-10"
                                 >
                                     X
-                                </button>
+                                </button>}
+
                                 {isVideo ?
                                     <video
                                         controls
