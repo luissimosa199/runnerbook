@@ -24,7 +24,7 @@ const User: FunctionComponent<UserPageProps> = ({ userData }) => {
                 </Link>
                 <h1 className="text-4xl font-bold text-gray-800 border-b-2 pb-3">{userData?.name}</h1>
             </div>
-            <div className="flex flex-col md:flex-row justify-around items-center border rounded-lg p-6 bg-white shadow-lg">
+            <div className="flex flex-col justify-around items-center border rounded-lg p-6 bg-white shadow-lg">
                 <div className="flex flex-col items-center relative">
                     <div className="flex flex-col items-center">
                         <Image
@@ -39,7 +39,7 @@ const User: FunctionComponent<UserPageProps> = ({ userData }) => {
                 </div>
 
                 <div>
-                    <UserPhotos username={userData?.email as string} direction="flex-col" />
+                    <UserPhotos username={userData?.email as string} />
                 </div>
 
             </div>
