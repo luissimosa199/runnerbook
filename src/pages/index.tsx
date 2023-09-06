@@ -6,34 +6,30 @@ import { TimelineFormInputs } from '@/types'
 import { GetServerSideProps } from 'next'
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react'
 import { debounce } from 'lodash'
-import { QueryClient, dehydrate, useInfiniteQuery } from 'react-query';
+import TimelineForm from '@/components/TimelineForm'
+import { useInfiniteQuery } from 'react-query';
 import { getTimelines } from '@/utils/getTimelines'
 import CategoriesList from '@/components/CategoriesList'
-import PrimaryForm from '@/components/PrimaryForm'
 
 interface MainboardProps {
   timelineData: TimelineFormInputs[];
 }
 
-const Mainboard: FunctionComponent<MainboardProps> = ({ timelineData }) => {
+const Mainboard: FunctionComponent = () => {
 
   const [searchValue, setSearchValue] = useState<string | null>(null);
   const [searchResult, setSearchResult] = useState<TimelineFormInputs[] | null>(null)
 
-const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery<TimelineFormInputs[]>(
-  'timelines',
-  ({ pageParam = 0 }) => getTimelines('timelines', pageParam),
-  {
-    initialData: {
-      pages: [timelineData], // Wrapping timelineData in another array
-      pageParams: [null]
-    },    
-    getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length === 0) return undefined;
-      return allPages.length;
-    },
-  }
-);
+  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery<TimelineFormInputs[]>(
+    'timelines',
+    ({ pageParam = 0 }) => getTimelines('timelines', pageParam),
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        if (lastPage.length === 0) return undefined;
+        return allPages.length;
+      },
+    }
+  );
 
   const debouncedHandleSearchBar = debounce((value: string) => {
     setSearchValue(value);
@@ -91,9 +87,9 @@ const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingN
         <input placeholder="Buscar por categoría" className="border rounded p-2 mb-4" type="text" onChange={handleSearchBar} />
         <CategoriesList />
       </div>
-      <PrimaryForm />
-      
-      <div className="mt-4 min-h-screen">
+      <TimelineForm />
+
+      <div className="mt-4">
         {isError && <p>Error: {JSON.stringify(error)} </p>}
 
         {searchValue && Array.isArray(searchResult) && searchResult.length > 0 ? (
@@ -158,9 +154,6 @@ const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingN
 export default Mainboard;
 
 export const getServerSideProps: GetServerSideProps<MainboardProps> = async () => {
-
-  const queryClient = new QueryClient();
-
   try {
     await dbConnect();
 
@@ -179,13 +172,9 @@ export const getServerSideProps: GetServerSideProps<MainboardProps> = async () =
       links: item.links,
     }));
 
-    queryClient.setQueryData('timelines', { pages: [timelineData], pageParams: [null] });
-
-
     return {
       props: {
         timelineData,
-        dehydratedState: dehydrate(queryClient),
       },
     };
   } catch (error) {
@@ -193,7 +182,6 @@ export const getServerSideProps: GetServerSideProps<MainboardProps> = async () =
     return {
       props: {
         timelineData: [],
-        dehydratedState: dehydrate(queryClient),
       },
     };
   }

@@ -18,8 +18,8 @@ const ProfilePicture: FunctionComponent<ProfilePictureProps> = ({ username }) =>
 
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center h-[128px]">
-                <div className="w-32 h-32 object-cover rounded-full mb-4"></div>
+            <div className="flex flex-col items-center">
+                <div className="w-32 h-32 object-cover rounded-full border mb-4"></div>
             </div>
         )
     }
@@ -27,25 +27,21 @@ const ProfilePicture: FunctionComponent<ProfilePictureProps> = ({ username }) =>
     if (isError) {
         return (
             <div className="flex flex-col items-center">
-                <Image
-                    src='/noprofile.png'
-                    width={128}
-                    height={128}
-                    alt={`${username}'s Avatar`}
-                    className="w-32 h-32 object-cover rounded-full border-gray-300 mb-5"
-                />
+                <div className="w-32 h-32 object-cover rounded-full border mb-4">
+                    <p>Error</p>
+                </div>
             </div>
         )
     }
 
     return (
-        <div className="flex flex-col items-center h-[128px]">
+        <div className="flex flex-col items-center">
             <Image
                 src={(data.image as string) || '/noprofile.png'}
                 width={128}
                 height={128}
                 alt={`${username}'s Avatar`}
-                className="w-32 h-32 object-cover rounded-full border-gray-300 mb-5"
+                className="w-32 h-32 object-cover rounded-full border-2 border-gray-300 mb-5"
             />
         </div>
     )

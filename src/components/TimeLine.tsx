@@ -89,7 +89,7 @@ const TimeLine: FunctionComponent<TimeLineProps> = ({ timeline, length, mainText
 
                     <div className="text-left">
                         {mainText && mainText.split('\n').map((paragraph, idx) => (
-                            <p key={idx} className={`${mainText.length > 300 ? "text-md font-normal" : "text-xl font-semibold"} mb-2 break-words `}>{paragraph}</p>
+                            <p key={idx} className={mainText.length > 300 ? "text-md font-normal mb-2" : "text-xl font-semibold mb-2"}>{paragraph}</p>
                         ))}
                     </div>
                     <p className="text-sm text-gray-600 mt-2">

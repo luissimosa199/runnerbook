@@ -52,13 +52,16 @@ export const uploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
 };
 
 export const handleFileChange = (
-  event: ChangeEvent<HTMLInputElement>
+  event: ChangeEvent<HTMLInputElement>,
+  setImages: Dispatch<SetStateAction<string[]>>,
+  setPreviews: Dispatch<SetStateAction<string[]>>
 ) => {
-  return new Promise<string[]>((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     const files = event.target.files;
-    const newPreviews: string[] = [];
 
     if (files && files.length > 0) {
+      const newPreviews: string[] = [];
+
       let processedFiles = 0;
 
       for (let i = 0; i < files.length; i++) {
@@ -70,7 +73,9 @@ export const handleFileChange = (
           processedFiles++;
 
           if (processedFiles === files.length) {
-            resolve(newPreviews);
+            setImages(newPreviews);
+            setPreviews(newPreviews);
+            resolve();
           }
         };
 
@@ -81,11 +86,11 @@ export const handleFileChange = (
         reader.readAsDataURL(files[i]);
       }
     } else {
-      resolve([]);
+      setImages([]);
+      resolve();
     }
   });
 };
-
 
 export const handleFileAdding = (
   event: ChangeEvent<HTMLInputElement>,

@@ -1,8 +1,6 @@
 import { InputItem } from "@/types";
 import { fetchCategories } from "@/utils/getCategories";
-import { isYtUrl } from "@/utils/isYtUrl";
-import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { faGreaterThan, faLink, faX } from "@fortawesome/free-solid-svg-icons";
+import { faGreaterThan, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useRef, useState } from "react";
 
@@ -88,10 +86,10 @@ const InputList: FunctionComponent<InputListProps> = ({ inputList, setInputList,
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
 
         const filteredSuggestions = suggestions.filter(e => e.startsWith(inputText));
-    
+
         if (event.key === "Enter") {
-            event.preventDefault(); // Prevent any default form action
             if (highlightedIndex !== null && highlightedIndex < filteredSuggestions.length) {
+                event.preventDefault(); // Prevent any default form action
                 addInput(filteredSuggestions[highlightedIndex]);
             } else {
                 addInput();
@@ -112,7 +110,6 @@ const InputList: FunctionComponent<InputListProps> = ({ inputList, setInputList,
             );
         }
     };
-    
 
     const addInput = (valueToAdd?: string) => {
 
@@ -175,10 +172,7 @@ const InputList: FunctionComponent<InputListProps> = ({ inputList, setInputList,
             return (
                 <li key={idx} className="bg-white border rounded-md p-2 mb-2 w-full relative">
                     <div className="flex justify-between items-start">
-                        <div>
-                            {isYtUrl(value) ? <FontAwesomeIcon icon={faYoutube} color="red" /> : <FontAwesomeIcon icon={faLink} />}
-                            <span className={`text-${isYtUrl(value) ? "red" : "blue"}-600 font-medium ml-2`}>{value}</span>
-                        </div>
+                        <span className="text-blue-600 font-medium">{value}</span>
                         <button
                             className="text-xs bg-red-500 font-bold w-5 h-5 rounded-full text-white absolute top-2 right-2"
                             onClick={(event) => {
