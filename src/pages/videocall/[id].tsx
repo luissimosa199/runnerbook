@@ -1,7 +1,12 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import VideocallPage from '../../components/VideoCallPage'
 import { ContextProvider } from '@/hooks/VideoCallContext';
+
+import dynamic from 'next/dynamic';
+
+const VideocallPage = dynamic(() => import('../../components/VideoCallPage'), {
+  ssr: false
+});
 
 const VideoCall = () => {
 
