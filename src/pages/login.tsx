@@ -59,6 +59,7 @@ export default function Login({ csrfToken }: InferGetServerSidePropsType<typeof 
                         {isLoading ? "Ingresando..." : "Ingresar"}
                     </button>
                     <Link href="/register" className="text-sm mt-2 text-slate-500 hover:opacity-75 transition-all">No tengo cuenta</Link>
+                    <Link href="/cambiarpassword" className="text-sm mt-2 text-slate-500 hover:opacity-75 transition-all">Olvide mi contraseña</Link>
                 </div>
             </form>
         </div>

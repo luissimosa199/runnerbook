@@ -18,10 +18,8 @@ export const uploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
     urls = await Promise.all(
       files.map(async (e) => {
         let file = e;
-
         const pngRgx = /\/png$/;
         const isPng = pngRgx.test(file.type);
-
         if (isPng) {
           const convertedFile = await convertToJpeg(file);
           file = convertedFile as File;
@@ -51,17 +49,12 @@ export const uploadImages = async (event: ChangeEvent<HTMLInputElement>) => {
   }
 };
 
-export const handleFileChange = (
-  event: ChangeEvent<HTMLInputElement>,
-  setImages: Dispatch<SetStateAction<string[]>>,
-  setPreviews: Dispatch<SetStateAction<string[]>>
-) => {
-  return new Promise<void>((resolve, reject) => {
+export const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+  return new Promise<string[]>((resolve, reject) => {
     const files = event.target.files;
+    const newPreviews: string[] = [];
 
     if (files && files.length > 0) {
-      const newPreviews: string[] = [];
-
       let processedFiles = 0;
 
       for (let i = 0; i < files.length; i++) {
@@ -73,9 +66,7 @@ export const handleFileChange = (
           processedFiles++;
 
           if (processedFiles === files.length) {
-            setImages(newPreviews);
-            setPreviews(newPreviews);
-            resolve();
+            resolve(newPreviews);
           }
         };
 
@@ -86,8 +77,7 @@ export const handleFileChange = (
         reader.readAsDataURL(files[i]);
       }
     } else {
-      setImages([]);
-      resolve();
+      resolve([]);
     }
   });
 };

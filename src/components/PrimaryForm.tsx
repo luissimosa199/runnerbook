@@ -43,8 +43,6 @@ const PrimaryForm = () => {
     const mutation = useMutation(
         async ({ data, urls }: { data: Omit<TimelineFormInputs, "_id" | "createdAt">; urls: string[] }) => {
 
-            console.log(urls)
-
             const payload = {
                 ...data,
                 photo: urls.map((url, photoIdx: number) => {
@@ -106,6 +104,7 @@ const PrimaryForm = () => {
     type ToggleFunction = (name: ModuleName) => void
 
     const toggleOpenModule: ToggleFunction = (name) => {
+
         if (name === "tags") {
             if (tagInputVisibility) {
                 setTagInputVisibility(false);
@@ -143,14 +142,25 @@ const PrimaryForm = () => {
         setSubmitBtnDisabled(true);
         const newPreviews = await handleFileChange(event);
         setPreviews(prevPreviews => [...prevPreviews, ...newPreviews]);
-        const uploadPromise = uploadImages(event);
-        setImageUploadPromise(uploadPromise);
-        setImagesCaptions(prevCaptions => [
-            ...prevCaptions,
-            ...new Array(newPreviews.length).fill(0).map((_, index) => ({ idx: prevCaptions.length + index, value: '' }))
-        ]);
+
+        try {
+            const uploadedUrls = await uploadImages(event);
+
+            // If you want to set the URLs to some state
+            setImages(prevImages => [...prevImages, ...uploadedUrls as string[]]);
+
+            setImagesCaptions(prevCaptions => [
+                ...prevCaptions,
+                ...new Array(newPreviews.length).fill(0).map((_, index) => ({ idx: prevCaptions.length + index, value: '' }))
+            ]);
+        } catch (error) {
+            console.error("Error uploading images:", error);
+        }
+
         setSubmitBtnDisabled(false);
+        event.target.value = '';
     };
+
 
     const inputFileRef = useRef<HTMLInputElement | null>(null);
     const handleInputActivation = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -160,46 +170,42 @@ const PrimaryForm = () => {
     };
 
     const onSubmit = async (data: TimelineFormInputs) => {
-
         if (data.mainText === '' && data.photo?.length === 0 && linksList.length === 0) {
-            return
+            return;
         }
 
-        setSubmitBtnDisabled(true)
-        const previewPhotos = createPhotoData(images, imagesCaption)
-        const previewData = createDataObject(data, previewPhotos, tagsList, session, linksList)
+        setSubmitBtnDisabled(true);
+        const previewPhotos = createPhotoData(images, imagesCaption);
+        const previewData = createDataObject(data, previewPhotos, tagsList, session, linksList);
         const { previousData } = optimisticUpdate({ data: previewData, images: images });
-        setTagsList([])
-        setLinksList([])
+
+        let urls: string[] = [];
+        if (imageUploadPromise) {
+            urls = await imageUploadPromise;
+            setImages([...images, ...urls]);
+            setImageUploadPromise(null);
+        }
+
+        const currentPhotos = createPhotoData(urls, imagesCaption);
+        const processedData = createDataObject(data, currentPhotos, tagsList, session, linksList);
+
+        try {
+            await mutation.mutateAsync({ data: processedData, urls: images });
+        } catch (err) {
+            if (previousData) {
+                queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', previousData);
+            }
+            throw err;
+        }
+
+        // Reset state only after successful submission
+        setTagsList([]);
+        setLinksList([]);
         setImages([]);
         reset();
-        if (imageUploadPromise) {
-            const urls = await imageUploadPromise;
-            setImages(prevImages => [...prevImages, ...(urls as string[])]);
-            const currentPhotos = createPhotoData(urls, imagesCaption);
-            const processedData = createDataObject(data, currentPhotos, tagsList, session, linksList);
-            setImageUploadPromise(null);
-            try {
-                console.log(urls);
-                await mutation.mutateAsync({ data: processedData, urls });
-            } catch (err) {
-                if (previousData) {
-                    queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', previousData);
-                }
-                throw err
-            }
-        } else {
-            try {
-                await mutation.mutateAsync({ data: previewData, urls: [] })
-            } catch (err) {
-                if (previousData) {
-                    queryClient.setQueryData<{ pages: TimelineFormInputs[][], pageParams: any[] }>('timelines', previousData);
-                }
-                throw err
-            }
-        }
-        setSubmitBtnDisabled(false)
+        setSubmitBtnDisabled(false);
     };
+
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="mt-12 border-2 flex flex-col min-h-48 my-4 rounded-md max-w-[850px] mx-auto">
@@ -209,12 +215,12 @@ const PrimaryForm = () => {
                 </div>
                 <textarea {...register("mainText")} placeholder="Escribe algo acá" className='w-full p-2 placeholder:text-2xl' />
             </div>
-            <div className={`border-t-2 p-4 ${moduleOpen() ? "min-h-48" : "h-1/3"}`}>
+            <div className={`border-t-2 p-4 bg-stone-100 ${moduleOpen() ? "min-h-48" : "h-1/3"}`}>
 
                 <div className=" flex gap-4">
                     <div >
                         <button className="h-8" onClick={handleInputActivation}>
-                            <FontAwesomeIcon className="h-full text-blue-600 cursor-pointer hover:text-blue-500 transition-all" icon={faCamera} />
+                            <FontAwesomeIcon className="h-full text-orange-600 cursor-pointer hover:text-orange-500 transition-all" icon={faCamera} />
                         </button>
                         <input
                             accept="image/png, image/jpeg, video/mp4"
@@ -230,18 +236,18 @@ const PrimaryForm = () => {
                     </div>
                     <div  >
                         <button className="h-8 " onClick={(e) => { e.preventDefault(); toggleOpenModule("tags") }}>
-                            <FontAwesomeIcon className={`h-full cursor-pointer hover:text-blue-500 transition-all ${tagInputVisibility ? "text-blue-900" : "text-blue-600"} `} icon={faTag} />
+                            <FontAwesomeIcon className={`h-full cursor-pointer hover:text-orange-500 transition-all ${tagInputVisibility ? "text-orange-900" : "text-orange-600"} `} icon={faTag} />
                         </button>
                     </div>
                     <div  >
                         <button className="h-8 " onClick={(e) => { e.preventDefault(); toggleOpenModule("links") }}>
-                            <FontAwesomeIcon className="h-full text-blue-600 cursor-pointer hover:text-blue-500 transition-all " icon={faLink} />
+                            <FontAwesomeIcon className="h-full text-orange-600 cursor-pointer hover:text-orange-500 transition-all " icon={faLink} />
                         </button>
                     </div>
 
                     <div className="ml-auto mr-4" >
                         <button className="h-8 " disabled={submitBtnDisabled} type="submit">
-                            <FontAwesomeIcon className="h-full text-blue-600 cursor-pointer hover:text-blue-500 transition-all " icon={faPaperPlane} />
+                            <FontAwesomeIcon className="h-full text-orange-600 cursor-pointer hover:text-orange-500 transition-all " icon={faPaperPlane} />
                         </button>
                     </div>
                 </div>
