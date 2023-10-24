@@ -74,7 +74,6 @@
     "@types/isomorphic-fetch": "^0.0.36",
     "@types/jest": "^29.5.3",
     "@types/lodash": "^4.14.195",
-    "@types/mongoose": "^5.11.97",
     "@types/simple-peer": "^9.11.5",
     "@types/stack-utils": "^2.0.1",
     "@types/uuid": "^9.0.2",
